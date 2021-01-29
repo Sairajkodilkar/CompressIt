@@ -1,4 +1,5 @@
 #COMPRESSION ALGORITMS
+
 	* Huffman Encoding
 	* LZW
 	* DCT
