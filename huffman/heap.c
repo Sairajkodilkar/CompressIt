@@ -1,0 +1,1 @@
+/* Build tree with min variance such that internal nodes has less priority than extern node */
