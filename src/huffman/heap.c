@@ -61,7 +61,7 @@ void queue_insert(priority_queue *q,  node *nd){
 
 	int p = PARENT(i);
 
-	/* loop until min heap property is satisfied 	*/
+	/* Loop until min heap property is satisfied 	*/
 	while(i > 0 && lessthan(q->queue[i], q->queue[p])){
 		exchange(&(q->queue[i]), &(q->queue[p]));
 		i = p;

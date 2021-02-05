@@ -41,7 +41,7 @@ typedef struct node {
  *  @param[in] pointer to the second node
  *  @param[out] boolean denoting a < b
  */
-inline int lessthan(node *a, node *b){
+static inline int lessthan(node *a, node *b){
 	return a->sym->frequency < b->sym->frequency;
 }
 

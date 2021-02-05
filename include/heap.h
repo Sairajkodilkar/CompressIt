@@ -33,7 +33,7 @@ node *queue_extract_min(priority_queue *q);
  * @param[in] first pointer to the pointer of node
  * @param[in] second pointer to the pointer of node
  */
-inline void exchange(node **a, node **b){
+static inline void exchange(node **a, node **b){
 	node *temp = *a;
 	*a = *b;
 	*b = temp;
@@ -47,35 +47,12 @@ inline void exchange(node **a, node **b){
  * @param[out] returns 1 if queue is empty
  */
 
-inline int queue_is_empty(priority_queue *q){
+static inline int queue_is_empty(priority_queue *q){
 	return q->queue_size == 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif
+
+
+
+
