@@ -18,13 +18,13 @@
 /* Maximum bits in the buffer */
 #define BIT_BUFFER_SIZE (8)
 
-typedef int bit;
+typedef char bit;
 
 typedef struct attributes {
 	/* Flag to determine if its already compressed or not */
 	int8_t compress;
 
-	/* to determine method of compression 
+	/* To determine method of compression 
 	 * 00H : Huffman 
 	 * 01H : LZW
 	 */
@@ -56,8 +56,10 @@ typedef struct file{
 	/* buffer to store incoming bits 
 	 * NOTE: buffer is considered to be 8 bit because of endianess
 	 */
-	uint8_t buffer;
-	int count;
+	uint8_t read_buffer;
+	uint8_t write_buffer;
+	int read_count;
+	int write_count;
 
 	/* permission bits for program */
 	short perm;

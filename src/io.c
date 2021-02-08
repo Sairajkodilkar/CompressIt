@@ -31,7 +31,7 @@ void init_file_atrb(
 
 }
 
-/* opens the text file for reading */
+/* opens the file for reading */
 file *open_file(char *name, int perm, int mode) {
 	//TODO: handle large file path name 
 	
@@ -50,15 +50,17 @@ file *open_file(char *name, int perm, int mode) {
 
 	/* sets general file info */
 	inputfile->fd = fd;
-	inputfile->buffer = 0;
-	inputfile->count = 0;
+	inputfile->read_buffer = 0;
+	inputfile->write_buffer = 0;
+	inputfile->read_count = 0;
+	inputfile->write_count = 0;
 	inputfile->perm = perm;
 
 
 	struct stat filestat;
 	int status = fstat(fd, &filestat);
 
-	if(status = ERROR)
+	if(status == ERROR)
 		return NULL;
 
 	/* set file attributes */
@@ -67,27 +69,39 @@ file *open_file(char *name, int perm, int mode) {
 	return inputfile;
 }
 
-char read_text_file(file *input){
-	/* performs low level reading */
-	/* returns character */
+/* Read functions 		*/
+
+int read_file(file *input, char *ch, size_t count){
+	return read(input->fd, ch, count);
 }
 
 
+/* reads the header in compressed file */
 int read_binary_header(file *input){
-	/* reads the header in compressed file */
 }
 
+bit read_bit(file *input){
+
+}
+
+
+
+
+
+/* Write functions 			*/
+
+int write_file(file *input, char *ch, size_t count){
+	return write(input->fd, ch, count);
+}
+
+/* write the header to header file */
 int write_binary_header(file *output){
-	/* write the header to header file */
 
 }
+/* writes to the file bit by bit */
 int write_bit(file *output, bit in_bit){
-	/* writes to the file bit by bit */
 }
 
-bit readbit(file *input){
-	/* Reads file bit by bit */
-}
 
 void close_file(file *input){
 }
