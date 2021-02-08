@@ -1,9 +1,8 @@
 #include <stdio.h>
+#include <errno.h>
 
 #include "io.h"
-
-#include <fcntl.h>
-#include <sys/types.h>
+/* utimensat to set the time attribute of file */
 
 #define NOERROR (0)
 #define ERROR (-1)
@@ -21,7 +20,6 @@ void init_file_atrb(
 
 	in->atrb.compress = 0;
 	in->atrb.method = 0;
-
 	in->atrb.time[0] = atime;
 	in->atrb.time[1] = mtime;
 	in->atrb.errstat = errstat;
@@ -38,7 +36,7 @@ file *open_file(char *name, int perm, int mode) {
 	/* opens the given file name with specified permission */
 	int fd = open(name, perm, mode);
 
-	if(fd = -1){
+	if(fd == -1){
 		return NULL;
 	}
 
@@ -69,19 +67,32 @@ file *open_file(char *name, int perm, int mode) {
 	return inputfile;
 }
 
-/* Read functions 		*/
+#define BYTE (1)
 
-int read_file(file *input, char *ch, size_t count){
-	return read(input->fd, ch, count);
-}
+/* Read functions				 		*/
 
 
-/* reads the header in compressed file */
+/* reads the header in compressed file 			*/
 int read_binary_header(file *input){
 }
 
-bit read_bit(file *input){
+int read_file(file *input, void *ch, size_t count){
+	return read(input->fd, ch, count);
+}
 
+int read_bit(file *input, bit *in_bit){
+	int filestat;
+	/* check if buffer is empty					 		*/
+	if(input->read_count == 0){
+		filestat = read(input->fd, &(input->read_buffer), BYTE);
+		input->read_count = BIT_BUFFER_SIZE;
+	}
+
+	/* read bit from the MSB side and decrement count 	*/
+	int offset = --input->read_count;
+	*in_bit = (input->read_buffer & (1 << offset)) >> offset;
+
+	return filestat;
 }
 
 
@@ -90,7 +101,7 @@ bit read_bit(file *input){
 
 /* Write functions 			*/
 
-int write_file(file *input, char *ch, size_t count){
+int write_file(file *input, void *ch, size_t count){
 	return write(input->fd, ch, count);
 }
 
@@ -100,11 +111,48 @@ int write_binary_header(file *output){
 }
 /* writes to the file bit by bit */
 int write_bit(file *output, bit in_bit){
-}
+	if(in_bit != 1 || in_bit != 0)
+		return -1;
 
+	int write_status = 1;
+	if(output->write_count == BIT_BUFFER_SIZE){
+		write_status = write(output->fd, &(output->write_buffer), BYTE);
+		output->write_count = 0;
+	}
+
+	/* Bit wise fill the write buffer 				*/
+	output->write_count++;
+	output->write_buffer |= in_bit << (8 - output->write_count);
+
+	return write_status;
+}
 
 void close_file(file *input){
+	close(input->fd);
+	free(input);
+	input = NULL;
+	return;
 }
 
 
 
+
+/*
+int read_file(file *input, char *ch, size_t count){
+	char newbyte;
+	int ct = read(input->fd, &newbyte, count);
+	if(count == 0){
+		return count;
+	}
+	int n = input->read_count;
+
+	// we have to take care of the remaining bit buffer also 
+
+	*ch = ((((1 << n) - 1) & input->read_buffer) << (8 - n)) | 
+		(((newbyte & (((1 << (8 - n)) - 1) << n))) >> n);
+	
+	input->read_buffer = newbyte & ((1 << n) - 1);
+
+	return ct;
+}
+*/
