@@ -1,7 +1,5 @@
 #ifndef _HUFFMAN
 #define _HUFFMAN
-//reading from file: 
-// read file and count frequency
 
 #include <stdio.h>
 #include <stdint.h>
@@ -34,6 +32,19 @@ typedef struct node {
 } node;
 
 
+/* symbol table cantaining each symbol 				*/
+typedef symbol symboltable[CHAR_RANGE];
+
+typedef node * huffman_tree;
+
+static inline int get_frequency(symbol *s){
+	return s->frequency;
+}
+
+static inline void set_frequency(symbol *s, int x){
+	s->frequency = x;
+}
+
 
 /*! 
  * compares two nodes.
@@ -47,16 +58,4 @@ static inline int lessthan(node *a, node *b){
 
 
 
-// Huffman :
-// make the heap of that frequency TODO: write heap ADT for node
-// extrating node from heap build huffman tree
-// count the lenght of each pattern
-// count the occurences of each length
-// convert pattern into canonical huffman code
 
-//writing to file:
-//write header
-//write the occurences of each length 
-//write end of the file
-
-#endif

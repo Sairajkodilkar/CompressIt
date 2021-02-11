@@ -51,6 +51,11 @@ static inline int queue_is_empty(priority_queue *q){
 	return q->queue_size == 0;
 }
 
+
+static inline int get_queue_size(priority_queue *q){
+	return q->queue_size;
+}
+
 #endif
 
 
