@@ -64,6 +64,6 @@ static inline int lessthan(node *a, node *b){
 	return a->sym->frequency < b->sym->frequency;
 }
 
-
+#endif
 
 

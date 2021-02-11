@@ -78,6 +78,8 @@ int read_file(file *input, void *ch, size_t count);
 int read_binary_header(file *input);
 int read_bit(file *input, bit *in_bit);
 
+off_t lseek_file(file *infile, off_t offset, int whenec);
+
 int write_file(file *input, void *ch, size_t count);
 int write_binary_header(file *output);
 int write_bit(file *output, bit in_bit);

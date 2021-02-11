@@ -11,7 +11,7 @@ huffman_tree get_node(symbol *sp){
 	huffman_tree temp = (node *) malloc(sizeof(node));
 
 	if(temp == NULL)
-		return;
+		return NULL;
 
 	temp->sym = sp;
 	temp->left = temp->right = NULL;
@@ -84,8 +84,9 @@ void build_priority_queue(priority_queue *sym_que, symboltable st){
 
 		sp = &st[i];
 
-		if(get_frequency(sp))
-			queue_insert(sym_que, sp)
+		if(get_frequency(sp)){
+			queue_insert(sym_que, get_node(sp));
+		}
 	}
 
 	return;
@@ -110,19 +111,19 @@ huffman_tree build_huffman_tree(priority_queue *sym_que){
 
 void huffman_encoder(file *infile, file *outfile){
 
-	sumboltable sym_table;
+	symboltable sym_table;
 
 	init_sym_table(sym_table);
 
-	build_sym_table(sym_table, infile);
+	build_sym_table(infile, sym_table);
 
 	lseek_file(infile, 0, SEEK_SET);
 
 	priority_queue sym_que;
-	init_priority_queue(&sym_que)
-	build_priority_queue(sym_que, sym_table);
+	init_priority_queue(&sym_que);
+	build_priority_queue(&sym_que, sym_table);
 
-	huffman_tree codetree = build_huffman_tree(sym_que);
+	huffman_tree codetree = build_huffman_tree(&sym_que);
 
 	return;
 }
