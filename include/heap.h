@@ -48,11 +48,15 @@ static inline void exchange(node **a, node **b){
  */
 
 static inline int queue_is_empty(priority_queue *q){
+	if(q == NULL)
+		return -1;
 	return q->queue_size == 0;
 }
 
 
 static inline int get_queue_size(priority_queue *q){
+	if(q == NULL)
+		return -1;
 	return q->queue_size;
 }
 

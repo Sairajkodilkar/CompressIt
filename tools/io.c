@@ -96,6 +96,9 @@ int read_bit(file *input, bit *in_bit){
 }
 
 
+off_t lseek_file(file *infile, off_t offset, int whence){
+	return lseek(infile->fd, offset, whence);
+}
 
 
 
@@ -128,8 +131,11 @@ int write_bit(file *output, bit in_bit){
 }
 
 void close_file(file *input){
+
 	close(input->fd);
+
 	free(input);
+
 	input = NULL;
 	return;
 }

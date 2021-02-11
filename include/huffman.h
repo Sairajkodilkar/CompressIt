@@ -38,11 +38,19 @@ typedef symbol symboltable[CHAR_RANGE];
 typedef node * huffman_tree;
 
 static inline int get_frequency(symbol *s){
+
+	if(s == NULL)
+		return 0;
+
 	return s->frequency;
 }
 
 static inline void set_frequency(symbol *s, int x){
+	if(s == NULL)
+		return;
+
 	s->frequency = x;
+	return;
 }
 
 
