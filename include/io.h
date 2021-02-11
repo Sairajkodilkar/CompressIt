@@ -5,26 +5,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* for file read write function */
+/* for file read write function 		*/
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 /* for timestamp */
 #include <time.h>
 
-/* for standard data type definition */
+/* for standard data type definition 	*/
 #include <stdint.h>
 
-/* Maximum bits in the buffer */
+#include <errno.h>
+
+/* Maximum bits in the buffer 			*/
 #define BIT_BUFFER_SIZE (8)
 
-typedef int bit;
+typedef char bit;
 
 typedef struct attributes {
 	/* Flag to determine if its already compressed or not */
 	int8_t compress;
 
-	/* to determine method of compression 
+	/* To determine method of compression 
 	 * 00H : Huffman 
 	 * 01H : LZW
 	 */
@@ -56,8 +59,10 @@ typedef struct file{
 	/* buffer to store incoming bits 
 	 * NOTE: buffer is considered to be 8 bit because of endianess
 	 */
-	uint8_t buffer;
-	int count;
+	uint8_t read_buffer;
+	uint8_t write_buffer;
+	int read_count;
+	int write_count;
 
 	/* permission bits for program */
 	short perm;
@@ -65,25 +70,21 @@ typedef struct file{
 	/* file attributes for input file */
 	attributes atrb;
 
-}file;
+} file;
 
 
-file *open_file(char *name, int perm, int mode);
-
-char read_char(file *input);
-
-int write_char(file *output);
-
+file *open_file(char *name, int perm, int mode) ;
+int read_file(file *input, void *ch, size_t count);
 int read_binary_header(file *input);
+int read_bit(file *input, bit *in_bit);
 
+off_t lseek_file(file *infile, off_t offset, int whenec);
+
+int write_file(file *input, void *ch, size_t count);
 int write_binary_header(file *output);
+int write_bit(file *output, bit in_bit);
 
-int write_bit(file *output, bit input_bit);
-
-bit read_bit(file *input);
-
-void closefile(file *input);
-
+int write_bit(file *output, bit in_bit);
 #endif
 
 
