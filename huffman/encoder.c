@@ -120,7 +120,9 @@ void huffman_encoder(file *infile, file *outfile){
 	lseek_file(infile, 0, SEEK_SET);
 
 	priority_queue sym_que;
+
 	init_priority_queue(&sym_que);
+
 	build_priority_queue(&sym_que, sym_table);
 
 	huffman_tree codetree = build_huffman_tree(&sym_que);
