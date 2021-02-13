@@ -29,10 +29,11 @@ huffman_tree combine_node(huffman_tree left, huffman_tree right){
 	int left_freq = 0, right_freq = 0;
 
 	if(left)
-		left_freq = get_frequency(sp);
+		left_freq = get_frequency(left->sym);
 
 	if(right)
-		right_freq = get_frequency(sp);
+		right_freq = get_frequency(right->sym);
+
 
 	set_frequency(sp, left_freq + right_freq);
 
@@ -53,6 +54,7 @@ void init_sym_table(symboltable st){
 
 	for(int i = 0; i < CHAR_RANGE; i++){
 		st[i] = null_sym;
+		st[i].ch = i;
 	}
 
 	return ;
@@ -61,7 +63,6 @@ void init_sym_table(symboltable st){
 int build_sym_table(file *infile, symboltable st){
 
 	unsigned char ch;
-	int count = 1;
 	int char_count = 0;
 
 	while(read_file(infile, &ch, 1)){
@@ -109,6 +110,39 @@ huffman_tree build_huffman_tree(priority_queue *sym_que){
 
 }
 
+
+void traverse(huffman_tree t){
+	if(t == NULL)
+		return;
+	if(t->left == NULL && t->right == NULL){
+		printf("alphabet %c, Frequency %d\n", t->sym->ch, t->sym->frequency);
+	}
+	traverse(t->left);
+	traverse(t->right);
+
+}
+
+void _get_code_length(symboltable st, huffman_tree codetree, int depth){
+
+	if(codetree->left == NULL && codetree->right == NULL){
+
+		codetree->sym->codelength = depth;
+
+	}
+
+	_get_code_length(st, codetree->left, depth + 1);
+	_get_code_length(st, codetree->right, depth + 1);
+
+	return;
+}
+
+#define ZERO_DEPTH (0)
+
+void get_code_length(symboltable st, huffman_tree codetree){
+
+	return _get_code_length(st, codetree, ZERO_DEPTH);
+}
+
 void huffman_encoder(file *infile, file *outfile){
 
 	symboltable sym_table;
@@ -124,6 +158,15 @@ void huffman_encoder(file *infile, file *outfile){
 	build_priority_queue(&sym_que, sym_table);
 
 	huffman_tree codetree = build_huffman_tree(&sym_que);
+
+	/* traverse through tree and find its code lenght 	*/
+	get_code_length(sym_table, codetree);
+
+	/* generates canonical huffman code for each symbol */
+	get_canonical_huffman_code(sym_table);
+
+	/* write huffman code to the file 					*/
+	write_huffman_code(sym_table, outfile);
 
 	return;
 }

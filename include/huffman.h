@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "io.h"
+
 #define CHAR_RANGE (256)
 
 typedef struct symbol {
@@ -63,6 +65,9 @@ static inline void set_frequency(symbol *s, int x){
 static inline int lessthan(node *a, node *b){
 	return a->sym->frequency < b->sym->frequency;
 }
+
+
+void huffman_encoder(file *infile, file *outfile);
 
 #endif
 

@@ -4,12 +4,6 @@
 #include <stdio.h>
 
 
-void traverse(priority_queue *q, int i){
-	for(int i = 0; i < q->queue_size; i++){
-		printf("%d\n", q->queue[i]->sym->frequency);
-	}
-
-}
 int main(){
 
 	priority_queue pq;

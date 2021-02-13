@@ -1,6 +1,9 @@
 
 
-INCLUDE = -I ../include/
+INCLUDE = -I include/
 
-testio: io.c testio.c
-	cc $(INCLUDE) -Wall io.c testio.c -o testio
+vpath %.c huffman
+vpath %.c tools
+
+testio: encoder.c io.c testio.c heap.c
+	cc $(INCLUDE) -Wall tools/io.c huffman/encoder.c huffman/heap.c testio.c -o testio
