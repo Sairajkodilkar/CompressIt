@@ -15,7 +15,13 @@ int write_count(file *outfile, int *codelength_count){
 	return i;
 }
 
-
+int write_codes(file *infile, file *outfile, symboltable st){
+	//read char from intfile
+	//get code of the char from symboltable
+	//write code bit by bit to the outfile
+	//repeat
+	//return number of char written
+}
 
 
 int write_huffman_code(
@@ -29,14 +35,14 @@ int write_huffman_code(
 	if(outfile == NULL)
 		return -1;
 	/* will consider later 
-	header = get_file_header(infile);
+	header = get_file_attribute(infile);
 	write_file_header(outfile, header);
 	*/
 	long file_char_count = 0;
 
 	file_char_count += write_count(outfile, codelength_count);
 
-	file_char_count += write_bits(infile, outfile, st);
+	file_char_count += write_codes(infile, outfile, st);
 
 	return 0;
 }

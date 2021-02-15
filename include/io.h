@@ -21,6 +21,16 @@
 /* Maximum bits in the buffer 			*/
 #define BIT_BUFFER_SIZE (8)
 
+
+/* end of the file flag 				*/
+#define EOF_FLAG (1)
+
+
+/* compression flags 					*/
+#define COMPRESSION_FLAG (1)
+#define HUFFMAN_FLAG (2)
+#define LZW_FLAG (4)
+
 typedef char bit;
 
 typedef struct attributes {
@@ -43,7 +53,7 @@ typedef struct attributes {
 	int errstat;
 	
 
-	/* original file permission */
+	/* original file permission 		*/
 	short usrperm;
 
 	/* file block size in bytes 		*/
@@ -87,17 +97,21 @@ static inline void set_char_size(file *infile, long int size){
 
 
 file *open_file(char *name, int perm, int mode) ;
+
 int read_file(file *input, void *ch, size_t count);
+
 int read_binary_header(file *input);
+
 int read_bit(file *input, bit *in_bit);
 
 off_t lseek_file(file *infile, off_t offset, int whenec);
 
 int write_file(file *input, void *ch, size_t count);
-int write_binary_header(file *output);
-int write_bit(file *output, bit in_bit);
 
-int write_bit(file *output, bit in_bit);
+int write_binary_header(file *output, file *infile);
+
+int write_bit(file *output, bit in_bit, int eof_flag);
+
 #endif
 
 
