@@ -1,8 +1,8 @@
 #include "huffman.h"
+#include "canonical.h"
 
 #include "heap.h"
 #include "io.h"
-#include "cannonical.h"
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -35,8 +35,7 @@ huffman_tree combine_node(huffman_tree left, huffman_tree right){
 	if(right)
 		right_freq = get_frequency(right->sym);
 
-
-	set_frequency(sp, left_freq + right_freq);
+set_frequency(sp, left_freq + right_freq);
 
 	huffman_tree root = get_node(sp);
 
@@ -115,9 +114,8 @@ huffman_tree build_huffman_tree(priority_queue *sym_que){
 void traverse(huffman_tree t){
 	if(t == NULL)
 		return;
-	if(t->left == NULL && t->right == NULL){
-		printf("alphabet %c, Frequency %d\n", t->sym->ch, t->sym->frequency);
-	}
+
+	printf("%c ", t->sym->ch);
 	traverse(t->left);
 	traverse(t->right);
 
@@ -125,9 +123,14 @@ void traverse(huffman_tree t){
 
 void _get_code_length(symboltable st, huffman_tree codetree, int depth){
 
+	if(codetree == NULL)
+		return;
+
 	if(codetree->left == NULL && codetree->right == NULL){
 
 		codetree->sym->codelength = depth;
+
+		return;
 
 	}
 
@@ -143,6 +146,27 @@ void get_code_length(symboltable st, huffman_tree codetree){
 
 	return _get_code_length(st, codetree, ZERO_DEPTH);
 }
+
+void init_code_lenght_count(symboltable sym_table, int *codelength_count) {
+
+	if(codelength_count == NULL)
+		return;
+
+	for(int i = 0; i < CHAR_RANGE; i++){
+		codelength_count[i] = 0;
+	}
+
+	for(int i = 0; i < CHAR_RANGE; i++){
+
+		int length = get_length(&sym_table[i]);
+
+		if(length > 0)
+			codelength_count[length]++;
+	}
+
+	return;
+}
+
 
 void huffman_encoder(file *infile, file *outfile){
 
@@ -160,26 +184,29 @@ void huffman_encoder(file *infile, file *outfile){
 
 	huffman_tree codetree = build_huffman_tree(&sym_que);
 
+
 	/* traverse through tree and find its code lenght 	*/
 	get_code_length(sym_table, codetree);
 
-	int codelenght_count[CHAR_RANGE];
 
-	for(int i = 0; i < CHAR_RANGE; i++){
-		codelength_count[i] = 0;
-	}
+	int codelength_count[CHAR_RANGE];
 
-	for(int i = 0; i < CHAR_RANGE; i++){
-		codelength_count[get_lenght(&st[i])]++;
-	}
+	init_code_lenght_count(sym_table, codelength_count);
 
 	/* generates canonical huffman code for each symbol */
 	get_canonical_huffman_code(sym_table, codelength_count);
 
 	/* write huffman code to the file 					*/
-	write_huffman_code(sym_table, outfile);
+	write_huffman_code(sym_table, outfile, countlength_count);
 
 	return;
+}
+
+void print_table(codetype *ct, int size){
+	for(int i = 0; i < size; i++){
+		printf("%x", ct[i]);
+	}
+	printf("\n");
 }
 
 

@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <limits.h>
 
 #include "io.h"
 
@@ -13,6 +14,8 @@
 typedef uint32_t codetype;
 typedef uint64_t dcodetype;
 
+#define CODETYPE_MAX UINT32_MAX
+#define DCODETYPE_MAX UINT64_MAX 
 typedef struct symbol {
 	
 	/* Byte representing any character from 0 - 255   		*/
@@ -71,7 +74,7 @@ static inline int lessthan(node *a, node *b){
 	return a->sym->frequency < b->sym->frequency;
 }
 
-static inline int get_lenght(symbol *s){
+static inline int get_length(symbol *s){
 	if(s == NULL)
 		return -1;
 	return s->codelength;
@@ -79,6 +82,8 @@ static inline int get_lenght(symbol *s){
 
 
 void huffman_encoder(file *infile, file *outfile);
+
+void print_table(codetype *ct, int size);
 
 #endif
 
