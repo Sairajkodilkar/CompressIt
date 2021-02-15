@@ -2,6 +2,7 @@
 
 #include "heap.h"
 #include "io.h"
+#include "cannonical.h"
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -162,8 +163,18 @@ void huffman_encoder(file *infile, file *outfile){
 	/* traverse through tree and find its code lenght 	*/
 	get_code_length(sym_table, codetree);
 
+	int codelenght_count[CHAR_RANGE];
+
+	for(int i = 0; i < CHAR_RANGE; i++){
+		codelength_count[i] = 0;
+	}
+
+	for(int i = 0; i < CHAR_RANGE; i++){
+		codelength_count[get_lenght(&st[i])]++;
+	}
+
 	/* generates canonical huffman code for each symbol */
-	get_canonical_huffman_code(sym_table);
+	get_canonical_huffman_code(sym_table, codelength_count);
 
 	/* write huffman code to the file 					*/
 	write_huffman_code(sym_table, outfile);

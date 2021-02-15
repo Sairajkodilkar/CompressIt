@@ -8,6 +8,11 @@
 
 #define CHAR_RANGE (256)
 
+#define CODE_SIZE (8)
+
+typedef uint32_t codetype;
+typedef uint64_t dcodetype;
+
 typedef struct symbol {
 	
 	/* Byte representing any character from 0 - 255   		*/
@@ -20,7 +25,7 @@ typedef struct symbol {
 	int codelength;
 
 	/* Canonical huffman code for charater 					*/
-	int64_t code[4];
+	codetype code[CODE_SIZE];
 
 } symbol;
 
@@ -64,6 +69,12 @@ static inline void set_frequency(symbol *s, int x){
  */
 static inline int lessthan(node *a, node *b){
 	return a->sym->frequency < b->sym->frequency;
+}
+
+static inline int get_lenght(symbol *s){
+	if(s == NULL)
+		return -1;
+	return s->codelength;
 }
 
 
