@@ -46,8 +46,12 @@ typedef struct attributes {
 	/* original file permission */
 	short usrperm;
 
-	/* file size in bytes */
+	/* file block size in bytes 		*/
 	off_t size;
+
+	/* no. of characters in file 		*/
+	long int char_size;
+
 
 }attributes;
 
@@ -71,6 +75,15 @@ typedef struct file{
 	attributes atrb;
 
 } file;
+
+static inline void set_char_size(file *infile, long int size){
+
+	if(infile == NULL)
+		return;
+
+	infile->atrb.char_size = size;
+	return;
+}
 
 
 file *open_file(char *name, int perm, int mode) ;

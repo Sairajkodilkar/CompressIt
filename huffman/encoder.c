@@ -60,10 +60,10 @@ void init_sym_table(symboltable st){
 	return ;
 }
 
-int build_sym_table(file *infile, symboltable st){
+long int build_sym_table(file *infile, symboltable st){
 
 	unsigned char ch;
-	int char_count = 0;
+	long int char_count = 0;
 
 	while(read_file(infile, &ch, 1)){
 
@@ -174,7 +174,8 @@ void huffman_encoder(file *infile, file *outfile){
 
 	init_sym_table(sym_table);
 
-	build_sym_table(infile, sym_table);
+	long int n = build_sym_table(infile, sym_table);
+	set_char_size(infile, n);
 
 	lseek_file(infile, 0, SEEK_SET);
 
@@ -196,8 +197,8 @@ void huffman_encoder(file *infile, file *outfile){
 	/* generates canonical huffman code for each symbol */
 	get_canonical_huffman_code(sym_table, codelength_count);
 
-	/* write huffman code to the file 					*/
-	write_huffman_code(sym_table, outfile, countlength_count);
+	g/* write huffman code to the file 					*/
+	write_huffman_code(sym_table, outfile, codelength_count);
 
 	return;
 }
