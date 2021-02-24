@@ -12,10 +12,11 @@
 #define CODE_SIZE (8)
 
 typedef uint32_t codetype;
-typedef uint64_t dcodetype;
+typedef uint64_t dcodetype; 
 
-#define CODETYPE_MAX UINT32_MAX
+#define CODETYPE_MAX UINT32_MAX 
 #define DCODETYPE_MAX UINT64_MAX 
+
 typedef struct symbol {
 	
 	/* Byte representing any character from 0 - 255   		*/
@@ -93,7 +94,6 @@ static inline codetype *get_code(symboltable st, unsigned char ch){
 void huffman_encoder(file *infile, file *outfile);
 
 void print_table(codetype *ct, int size);
-
 
 
 int write_huffman_code(

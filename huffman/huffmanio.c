@@ -40,6 +40,13 @@ int write_codes(file *infile, file *outfile, symboltable st){
 	return count;
 }
 
+int write_char_size(file *infile, file *outfile){
+
+	long int t = get_char_size(infile);
+
+	return write_file(outfile, &t, sizeof(t));
+}
+
 
 int write_huffman_code(
 		symboltable st,
@@ -56,6 +63,8 @@ int write_huffman_code(
 	   write_file_header(outfile, header);
 	 */
 	long file_char_count = 0;
+
+	file_char_count += write_char_size(infile, outfile);
 
 	file_char_count += write_count(outfile, codelength_count);
 

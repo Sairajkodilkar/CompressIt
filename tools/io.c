@@ -163,13 +163,14 @@ int write_bit(file *output, bit in_bit, int eof_flag){
 		return flush_file(output);
 	}
 
-	if(in_bit != 1 || in_bit != 0)
+	if(!(in_bit == 1 || in_bit == 0))
 		return -1;
 
 	int write_status = 0;
 	if(output->write_count == BIT_BUFFER_SIZE){
 		write_status = write(output->fd, &(output->write_buffer), BYTE);
 		output->write_count = 0;
+		output->write_buffer = 0;
 	}
 
 	/* Bit wise fill the write buffer 				*/
