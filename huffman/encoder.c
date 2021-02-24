@@ -7,6 +7,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+static inline int lessthan(node *a, node *b){
+	return a->sym->frequency < b->sym->frequency;
+}
+
+
 huffman_tree get_node(symbol *sp){
 
 	huffman_tree temp = (node *) malloc(sizeof(node));
@@ -168,7 +173,7 @@ void init_code_lenght_count(symboltable sym_table, int *codelength_count) {
 }
 
 
-void huffman_encoder(file *infile, file *outfile){
+long huffman_encoder(file *infile, file *outfile){
 
 	symboltable sym_table;
 
@@ -199,16 +204,17 @@ void huffman_encoder(file *infile, file *outfile){
 	get_canonical_huffman_code(sym_table, codelength_count);
 
 	/* write huffman code to the file 					*/
-	write_huffman_code(sym_table, infile, outfile, codelength_count);
+	long filesize = write_huffman_code(sym_table, infile, outfile, codelength_count);
 
-	return;
+	return filesize ;
 }
 
-void print_table(codetype *ct, int size){
-	for(int i = 0; i < size; i++){
-		printf("%x", ct[i]);
-	}
-	printf("\n");
+long huffman_decoder(file *infile, file *outfile){
+	//read the long char count from infile.
+	//read the count table from the file.
+	//generate code from that count.
+	//generate the tree from that code.
+	//read file bit by bit till char count is zero and decode the character.
 }
 
 

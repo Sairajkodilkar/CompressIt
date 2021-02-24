@@ -91,7 +91,7 @@ static inline codetype *get_code(symboltable st, unsigned char ch){
 }
 
 
-void huffman_encoder(file *infile, file *outfile);
+long huffman_encoder(file *infile, file *outfile);
 
 void print_table(codetype *ct, int size);
 

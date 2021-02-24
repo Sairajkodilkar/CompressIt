@@ -48,7 +48,7 @@ int write_char_size(file *infile, file *outfile){
 }
 
 
-int write_huffman_code(
+long write_huffman_code(
 		symboltable st,
 		file *infile,
 		file *outfile,
@@ -70,7 +70,7 @@ int write_huffman_code(
 
 	file_char_count += write_codes(infile, outfile, st);
 
-	return 0;
+	return file_char_count;
 }
 
 
