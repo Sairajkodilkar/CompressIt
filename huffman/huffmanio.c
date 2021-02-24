@@ -74,3 +74,28 @@ long write_huffman_code(
 }
 
 
+long read_char_size(file *infile){
+	if(!infile)
+		return -1;
+
+	long char_size;
+	read_file(infile, &char_size, sizeof(char_size));
+
+	return char_size;
+}
+
+void read_code_length_count(file *infile, int *codelenght_count, int n){
+	if(!codelenght_count)
+		return;
+
+	int i;
+	unsigned char ch;
+	for(i = 0; i < n; i++){
+		read_file(infile, &ch, 1);
+		codelenght_count[i] = ch;
+	}
+
+	return;
+}
+
+

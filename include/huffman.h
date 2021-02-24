@@ -65,20 +65,19 @@ static inline void set_frequency(symbol *s, int x){
 }
 
 
-/*!
- * compares two nodes.
- *  @param[in] pointer to the first node
- *  @param[in] pointer to the second node
- *  @param[out] boolean denoting a < b
- */
-static inline int lessthan(node *a, node *b){
-	return a->sym->frequency < b->sym->frequency;
-}
-
 static inline int get_length(symbol *s){
 	if(s == NULL)
 		return -1;
 	return s->codelength;
+}
+
+static inline void set_codelength(symbol *s, int n){
+	if(s == NULL)
+		return ;
+
+	if(n < 0) n = 0;
+
+	s->codelength = n;
 }
 
 static inline codetype *get_code(symboltable st, unsigned char ch){
@@ -91,18 +90,22 @@ static inline codetype *get_code(symboltable st, unsigned char ch){
 }
 
 
+
 long huffman_encoder(file *infile, file *outfile);
 
 void print_table(codetype *ct, int size);
 
 
-int write_huffman_code(
+long write_huffman_code(
 		symboltable st,
 		file *infile,
 		file *outfile,
 		int *codelength_count
 		);
 
+long read_char_size(file *infile);
+
+void read_code_length_count(file *infile, int *codelenght_count, int n);
 
 #endif
 

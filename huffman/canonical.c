@@ -91,6 +91,35 @@ void shift_left_by_one(codetype *code){
 	return;
 }
 
+void shift_right_by_one(codetype *code){
+	codetype mask = 1, 
+			 t,
+			 prev_t;
+
+	int count = 0;
+
+	while(mask != 0){
+		mask = mask << 1;
+		count++;
+	}
+
+	mask = 1;
+	t = 0;
+
+	for(int i = 0; i < CODE_SIZE; i++){
+
+		prev_t = code[i] & mask;
+
+		code[i] = code[i] >> 1;
+
+		code[i] = code[i] | (t << (count - 1));
+
+		t = prev_t;
+	}
+
+	return;
+}
+
 int copy(codetype *dest, codetype *src, int size){
 	if(dest == NULL || src == NULL)
 		return 0;

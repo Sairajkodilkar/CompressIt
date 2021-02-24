@@ -23,8 +23,9 @@ typedef struct priority_queue {
  * user interface functions							
  */
 void init_priority_queue(priority_queue *q);
-void queue_insert(priority_queue *q,  node *nd);
-node *queue_extract_min(priority_queue *q);
+
+void queue_insert(priority_queue *q,  node *nd, int (*comp) (void *, void *));
+node *queue_extract_min(priority_queue *q, int (*comp) (void *, void *));
 
 
 /*! 
