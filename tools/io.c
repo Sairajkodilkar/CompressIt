@@ -124,11 +124,11 @@ off_t lseek_file(file *infile, off_t offset, int whence){
 
 int flush_file(file *infile){
 	int x = 0;
-	if(infile->write_buffer != 0 && infile->perm & O_WRONLY){
+	if(infile->write_count != 0 && infile->perm & O_WRONLY){
 
 		x = write_file(infile, &(infile->write_buffer), sizeof(infile->write_buffer));
 
-		infile->write_buffer = 0;
+		infile->write_count = 0;
 	}
 
 	return x;
@@ -174,7 +174,7 @@ int write_bit(file *output, bit in_bit, int eof_flag){
 
 	/* Bit wise fill the write buffer 				*/
 	output->write_count++;
-	output->write_buffer |= in_bit << (8 - output->write_count);
+	output->write_buffer |= in_bit << (BIT_BUFFER_SIZE - output->write_count);
 
 	return write_status;
 }

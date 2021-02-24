@@ -64,7 +64,7 @@ static inline void set_frequency(symbol *s, int x){
 }
 
 
-/*! 
+/*!
  * compares two nodes.
  *  @param[in] pointer to the first node
  *  @param[in] pointer to the second node
@@ -80,10 +80,29 @@ static inline int get_length(symbol *s){
 	return s->codelength;
 }
 
+static inline codetype *get_code(symboltable st, unsigned char ch){
+	if(st == NULL)
+		return NULL;
+
+	codetype *temp = st[ch].code;
+
+	return temp;
+}
+
 
 void huffman_encoder(file *infile, file *outfile);
 
 void print_table(codetype *ct, int size);
+
+
+
+int write_huffman_code(
+		symboltable st,
+		file *infile,
+		file *outfile,
+		int *codelength_count
+		);
+
 
 #endif
 

@@ -1,4 +1,5 @@
 #include "huffman.h"
+#include "canonical.h"
 #include "io.h"
 
 
@@ -9,18 +10,34 @@ int write_count(file *outfile, int *codelength_count){
 	int i = 0;
 	
 	for(i = 0; i < CHAR_RANGE; i++){
-		ch = (unsigned char) codelength[i];
-		write_file(outfile, ch, 1);
+		ch = (unsigned char) codelength_count[i];
+		write_file(outfile, &ch, 1);
 	}
 	return i;
 }
 
+/* second pass for input file is done here */
+
 int write_codes(file *infile, file *outfile, symboltable st){
-	//read char from intfile
-	//get code of the char from symboltable
-	//write code bit by bit to the outfile
-	//repeat
-	//return number of char written
+
+	unsigned char ch;
+	int count = 0;
+	bit b = 0;
+
+	while(read_file(infile, &ch, 1) != 0){
+
+		int codelength = get_length(&st[ch]);
+
+		for(int i = 0; i < codelength; i++){
+
+			b = get_nbit(&st[ch], i);
+
+			count += write_bit(outfile, b, NO_EOF);
+		}
+	}
+	count += write_bit(outfile, b, EOF_FLAG);
+
+	return count;
 }
 
 
@@ -32,12 +49,12 @@ int write_huffman_code(
 		)
 
 {
-	if(outfile == NULL)
+	if(outfile == NULL || infile == NULL)
 		return -1;
 	/* will consider later 
-	header = get_file_attribute(infile);
-	write_file_header(outfile, header);
-	*/
+	   header = get_file_attribute(infile);
+	   write_file_header(outfile, header);
+	 */
 	long file_char_count = 0;
 
 	file_char_count += write_count(outfile, codelength_count);
@@ -46,5 +63,5 @@ int write_huffman_code(
 
 	return 0;
 }
-		
+
 

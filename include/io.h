@@ -23,7 +23,9 @@
 
 
 /* end of the file flag 				*/
+#define NO_EOF (0)
 #define EOF_FLAG (1)
+
 
 
 /* compression flags 					*/

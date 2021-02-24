@@ -1,5 +1,33 @@
 #include "huffman.h"
 
+/* n goes from 0 to codelenght - 1 */
+
+bit get_nbit(symbol *s, int n){
+
+	int length = s->codelength;
+
+	if(n >= length)
+		return 2; 		//ivalid bit
+
+	//as index starts from right side
+	n = length - n - 1;
+
+	codetype *ct = s->code;
+
+	int bit_size = sizeof(codetype) * 8;
+
+	//global index
+	int index = CODE_SIZE - (n / bit_size) - 1;
+
+	//local index
+	codetype bit_index = n % bit_size;
+	codetype mask = 1 << bit_index;
+
+	bit b = (ct[index] & mask) >> bit_index;
+
+	return b;
+}
+
 void plus_equal(codetype *code, int count){
 
 	if(code == NULL)
@@ -8,10 +36,10 @@ void plus_equal(codetype *code, int count){
 	dcodetype i = 0, carry = 0; 
 	int j = 0;
 
-	for(j = 0; j < CODE_SIZE; j++){
+	for(j = CODE_SIZE - 1; j >= 0; j--){
 
 		i = (dcodetype) code[j];
-		i = i + (dcodetype) count + carry;
+		i = (dcodetype) i + (dcodetype) count + (dcodetype) carry;
 
 		if(i > (dcodetype)CODETYPE_MAX){
 
@@ -49,7 +77,7 @@ void shift_left_by_one(codetype *code){
 	mask = prevmask;
 	t = 0;
 
-	for(int i = 0; i < CODE_SIZE; i++){
+	for(int i = CODE_SIZE - 1; i >= 0; i--){
 
 		prev_t = code[i] & mask;
 
@@ -113,8 +141,6 @@ void get_canonical_huffman_code(
 
 			/* Increment code by one 					*/
 			plus_equal(next_code[st[i].codelength], 1);
-			printf("%c, %d: ", st[i].ch, st[i].codelength);
-			print_table(st[i].code, CODE_SIZE);
 		}
 	}
 

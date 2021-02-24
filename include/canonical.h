@@ -7,6 +7,7 @@ void get_canonical_huffman_code(
 		symboltable st,
 		int *codelength_count);
 
+bit get_nbit(symboltable st, int n);
 
 #endif
 
