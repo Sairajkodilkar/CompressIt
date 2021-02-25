@@ -72,8 +72,7 @@ static inline int get_length(symbol *s){
 }
 
 static inline void set_codelength(symbol *s, int n){
-	if(s == NULL)
-		return ;
+	if(s == NULL) return ;
 
 	if(n < 0) n = 0;
 
@@ -92,6 +91,7 @@ static inline codetype *get_code(symboltable st, unsigned char ch){
 
 
 long huffman_encoder(file *infile, file *outfile);
+long huffman_decoder(file *infile, file *outfile);
 
 void print_table(codetype *ct, int size);
 
@@ -105,7 +105,7 @@ long write_huffman_code(
 
 long read_char_size(file *infile);
 
-void read_code_length_count(file *infile, int *codelenght_count, int n);
+long read_code_length_count(file *infile, symboltable st, int n);
 
 #endif
 

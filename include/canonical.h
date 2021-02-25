@@ -11,9 +11,9 @@ void shift_left_by_one(codetype *code);
 
 void shift_right_by_one(codetype *code);
 
-int copy(codetype *dest, codetype *src, int size){
+int copy(codetype *dest, codetype *src, int size);
 
-bit get_nbit(symboltable st, int n);
+bit get_nbit(symbol *st, int n);
 
 
 #endif

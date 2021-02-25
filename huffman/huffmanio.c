@@ -4,15 +4,16 @@
 
 
 
-int write_count(file *outfile, int *codelength_count){
+int write_count(file *outfile, symboltable st){
 	/* unsigned char is enough to hold max codelength count i.e 255 */
 	unsigned char ch;
 	int i = 0;
 	
 	for(i = 0; i < CHAR_RANGE; i++){
-		ch = (unsigned char) codelength_count[i];
+		ch = (unsigned char) get_length(&(st[i]));
 		write_file(outfile, &ch, 1);
 	}
+	printf("\n");
 	return i;
 }
 
@@ -66,7 +67,7 @@ long write_huffman_code(
 
 	file_char_count += write_char_size(infile, outfile);
 
-	file_char_count += write_count(outfile, codelength_count);
+	file_char_count += write_count(outfile, st);
 
 	file_char_count += write_codes(infile, outfile, st);
 
@@ -84,18 +85,25 @@ long read_char_size(file *infile){
 	return char_size;
 }
 
-void read_code_length_count(file *infile, int *codelenght_count, int n){
-	if(!codelenght_count)
-		return;
+long read_code_length_count(
+		file *infile, 
+		symboltable st, 
+		int n)
+{
+	if(!st)
+		return -1;
 
 	int i;
 	unsigned char ch;
+	long count = 0;
+
 	for(i = 0; i < n; i++){
 		read_file(infile, &ch, 1);
-		codelenght_count[i] = ch;
+		set_codelength(&(st[i]), (int) ch);
+		count++;
 	}
 
-	return;
+	return count;
 }
 
 
