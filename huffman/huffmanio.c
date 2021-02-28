@@ -27,17 +27,13 @@ int write_codes(file *infile, file *outfile, symboltable st){
 	while(read_file(infile, &ch, 1) != 0){
 
 		int codelength = get_length(&st[ch]);
-		//printf("codelength %c: %d : ", ch, codelength);
-		//print_code(st[ch].code);
 
 		for(int i = 0; i < codelength; i++){
 
 			b = get_nbit(&st[ch], i);
-		//	printf("%d ", b);
 
 			count += write_bit(outfile, b, NO_EOF);
 		}
-		//printf("\n");
 	}
 	count += write_bit(outfile, b, EOF_FLAG);
 
@@ -106,6 +102,33 @@ long read_code_length_count(
 		count++;
 	}
 
+	return count;
+}
+
+long inflate_file(
+		file *infile, 
+		file *outfile, 
+		huffman_tree codetree, 
+		long char_size)
+{
+
+	bit b;
+	long count = 0;
+	int found;
+	char ch;
+
+	while(count != char_size){
+
+		read_bit(infile, &b);
+
+		found = search_tree(codetree, b, &ch);
+
+		if(found){
+			count++;
+			write_file(outfile, &ch, sizeof(ch));
+		}
+
+	}
 	return count;
 }
 

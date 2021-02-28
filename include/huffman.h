@@ -88,6 +88,8 @@ static inline codetype *get_code(symboltable st, unsigned char ch){
 	return temp;
 }
 
+enum {NOT_FOUND, FOUND};
+
 
 
 long huffman_encoder(file *infile, file *outfile);
@@ -106,6 +108,14 @@ long write_huffman_code(
 long read_char_size(file *infile);
 
 long read_code_length_count(file *infile, symboltable st, int n);
+
+long inflate_file(
+		file *infile, 
+		file *outfile, 
+		huffman_tree codetree, 
+		long char_size);
+
+int search_tree(huffman_tree codetree, bit b, char *ch);
 
 #endif
 
