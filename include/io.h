@@ -21,6 +21,14 @@
 /* Maximum bits in the buffer 			*/
 #define BIT_BUFFER_SIZE (8)
 
+
+/* end of the file flag 				*/
+#define NO_EOF (0)
+#define EOF_FLAG (1)
+
+
+
+
 typedef char bit;
 
 typedef struct attributes {
@@ -43,11 +51,15 @@ typedef struct attributes {
 	int errstat;
 	
 
-	/* original file permission */
+	/* original file permission 		*/
 	short usrperm;
 
-	/* file size in bytes */
+	/* file block size in bytes 		*/
 	off_t size;
+
+	/* no. of characters in file 		*/
+	long int char_size;
+
 
 }attributes;
 
@@ -72,19 +84,39 @@ typedef struct file{
 
 } file;
 
+static inline void set_char_size(file *infile, long int size){
+
+	if(infile == NULL)
+		return;
+
+	infile->atrb.char_size = size;
+	return;
+}
+
+static inline long int get_char_size(file *infile){
+	if(infile == NULL)
+		return -1;
+
+	return infile->atrb.char_size;
+}
+
 
 file *open_file(char *name, int perm, int mode) ;
+
 int read_file(file *input, void *ch, size_t count);
+
 int read_binary_header(file *input);
+
 int read_bit(file *input, bit *in_bit);
 
 off_t lseek_file(file *infile, off_t offset, int whenec);
 
 int write_file(file *input, void *ch, size_t count);
-int write_binary_header(file *output);
-int write_bit(file *output, bit in_bit);
 
-int write_bit(file *output, bit in_bit);
+int write_binary_header(file *output, file *infile);
+
+int write_bit(file *output, bit in_bit, int eof_flag);
+
 #endif
 
 

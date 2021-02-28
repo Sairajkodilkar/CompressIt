@@ -7,6 +7,9 @@ void min_heapify(priority_queue *q, int i);
 
 void init_priority_queue(priority_queue *q){
 
+	if(!q)
+		return;
+
 	/* Initially queue is empty 				*/
 	q->queue_size = 0;
 
@@ -15,31 +18,35 @@ void init_priority_queue(priority_queue *q){
 
 #define TRUE (1)
 
-void min_heapify(priority_queue *q, int i){
-	int l, r, smallest;
+void heapify(priority_queue *q, int i, int (*comp) (void *, void *)){
+
+	if(!q || !comp)
+		return ;
+
+	int l, r, sg;
 
 	while(TRUE){
 
-		smallest = i;
+		sg = i;
 
 		l = LEFTCHILD(i);
 		r = RIGHTCHILD(i);
 
-		/* Find the smallest of parent, left child, right child 		*/
+		/* Find the smallest/greatest of parent, left child, right child 		*/
 
-		if(l < q->queue_size && lessthan(q->queue[l], q->queue[smallest]))
-			smallest = l;
+		if(l < q->queue_size && (*comp)(q->queue[l], q->queue[sg]))
+			sg = l;
 
-		if(r < q->queue_size && lessthan(q->queue[r], q->queue[smallest]))
-			smallest = r;
+		if(r < q->queue_size && (*comp)(q->queue[r], q->queue[sg]))
+			sg = r;
 
 		/* 
-		 * If parent is the smallest then simply exchange parent with smallest
-		 * and continue with smallest as new parent.
+		 * If parent is the smallest/greatest then simply exchange parent with smallest
+		 * and continue with smallest/greatest as new parent.
 		 */
-		if(smallest != i){
-			exchange(&(q->queue[i]), &(q->queue[smallest]));
-			i = smallest;
+		if(sg != i){
+			exchange(&(q->queue[i]), &(q->queue[sg]));
+			i = sg;
 		}
 		else{
 			break;
@@ -48,7 +55,10 @@ void min_heapify(priority_queue *q, int i){
 	return;
 }
 
-void queue_insert(priority_queue *q,  node *nd){
+void queue_insert(priority_queue *q,  node *nd, int (*comp)(void *, void *)){
+
+	if(!q || !nd || !comp)
+		return;
 
 	/* Get the empty index 							*/
 	int i = q->queue_size;
@@ -62,7 +72,7 @@ void queue_insert(priority_queue *q,  node *nd){
 	int p = PARENT(i);
 
 	/* Loop until min heap property is satisfied 	*/
-	while(i > 0 && lessthan(q->queue[i], q->queue[p])){
+	while(i > 0 && (*comp)(q->queue[i], q->queue[p]) ){
 		exchange(&(q->queue[i]), &(q->queue[p]));
 		i = p;
 		p = PARENT(i);
@@ -71,9 +81,9 @@ void queue_insert(priority_queue *q,  node *nd){
 	q->queue_size++;
 }
 
-node *queue_extract_min(priority_queue *q){
+node *queue_extract_min(priority_queue *q, int (*comp) (void *, void *)){
 	/* check if queue is empty 						*/
-	if(queue_is_empty(q))
+	if(queue_is_empty(q) || !comp || !q)
 		return NULL;
 
 	/* Get the top of the heap which is min			*/
@@ -84,7 +94,7 @@ node *queue_extract_min(priority_queue *q){
 	/* replace min by last of the queue 			*/
 	q->queue[0] = q->queue[i];
 	
-	min_heapify(q, 0);
+	heapify(q, 0, comp);
 
 	return min_node;
 }
