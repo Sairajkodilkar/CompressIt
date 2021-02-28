@@ -79,13 +79,33 @@ static inline void set_codelength(symbol *s, int n){
 	s->codelength = n;
 }
 
-static inline codetype *get_code(symboltable st, unsigned char ch){
+static inline codetype *get_code(symbol *st){
 	if(st == NULL)
 		return NULL;
 
-	codetype *temp = st[ch].code;
+	codetype *temp = st->code;
 
 	return temp;
+}
+
+static inline symbol *get_symbol(node *n){
+	if(!n)
+		return NULL;
+
+	return n->sym;
+}
+
+static inline void set_char(symbol *s, unsigned char ch){
+	if(!s)
+		return;
+	s->ch = ch;
+	return;
+}
+static inline unsigned char get_char(symbol *s){
+	if(!s)
+		return 0;
+
+	return s->ch;
 }
 
 enum {NOT_FOUND, FOUND};

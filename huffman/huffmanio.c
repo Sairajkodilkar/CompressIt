@@ -5,6 +5,8 @@
 
 
 int write_count(file *outfile, symboltable st){
+	if(!outfile || !st)
+		return -1;
 	/* unsigned char is enough to hold max codelength count i.e 255 */
 	unsigned char ch;
 	int i = 0;
@@ -19,6 +21,8 @@ int write_count(file *outfile, symboltable st){
 /* second pass for input file is done here */
 
 int write_codes(file *infile, file *outfile, symboltable st){
+	if(!infile || !outfile || !st)
+		return -1;
 
 	unsigned char ch;
 	int count = 0;
@@ -41,6 +45,8 @@ int write_codes(file *infile, file *outfile, symboltable st){
 }
 
 int write_char_size(file *infile, file *outfile){
+	if(!infile || !outfile)
+		return -1;
 
 	long int t = get_char_size(infile);
 
@@ -56,7 +62,7 @@ long write_huffman_code(
 		)
 
 {
-	if(outfile == NULL || infile == NULL)
+	if(outfile == NULL || infile == NULL || codelength_count == NULL || st == NULL)
 		return -1;
 	/* will consider later 
 	   header = get_file_attribute(infile);
@@ -89,7 +95,7 @@ long read_code_length_count(
 		symboltable st, 
 		int n)
 {
-	if(!st)
+	if(!st || !infile)
 		return -1;
 
 	int i;
@@ -111,6 +117,8 @@ long inflate_file(
 		huffman_tree codetree, 
 		long char_size)
 {
+	if(!infile || !outfile || !codetree)
+		return -1;
 
 	bit b;
 	long count = 0;

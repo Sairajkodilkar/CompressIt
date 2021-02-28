@@ -8,8 +8,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int lessthan(void *s1, void *s2){
-	return ((node *) s1)->sym->frequency < ((node *) s2)->sym->frequency;
+int lessthan(void *n1, void *n2){
+
+	symbol *s1, *s2;
+
+	s1 = get_symbol((node *) n1);
+	s2 = get_symbol((node *) n2);
+
+	return get_frequency(s1) < get_frequency(s2);
 }
 
 int valid_sym(void *s){
@@ -48,8 +54,6 @@ long huffman_encoder(file *infile, file *outfile){
 
 	/* generates canonical huffman code for each symbol */
 	get_canonical_huffman_code(sym_table, codelength_count);
-
-	traverse(codetree, 0);
 
 	/* write huffman code to the file 					*/
 	long filesize = write_huffman_code(sym_table, infile, outfile, codelength_count);

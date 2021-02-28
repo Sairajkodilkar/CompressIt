@@ -7,6 +7,9 @@ void min_heapify(priority_queue *q, int i);
 
 void init_priority_queue(priority_queue *q){
 
+	if(!q)
+		return;
+
 	/* Initially queue is empty 				*/
 	q->queue_size = 0;
 
@@ -16,6 +19,10 @@ void init_priority_queue(priority_queue *q){
 #define TRUE (1)
 
 void heapify(priority_queue *q, int i, int (*comp) (void *, void *)){
+
+	if(!q || !comp)
+		return ;
+
 	int l, r, sg;
 
 	while(TRUE){
@@ -50,6 +57,9 @@ void heapify(priority_queue *q, int i, int (*comp) (void *, void *)){
 
 void queue_insert(priority_queue *q,  node *nd, int (*comp)(void *, void *)){
 
+	if(!q || !nd || !comp)
+		return;
+
 	/* Get the empty index 							*/
 	int i = q->queue_size;
 
@@ -73,7 +83,7 @@ void queue_insert(priority_queue *q,  node *nd, int (*comp)(void *, void *)){
 
 node *queue_extract_min(priority_queue *q, int (*comp) (void *, void *)){
 	/* check if queue is empty 						*/
-	if(queue_is_empty(q))
+	if(queue_is_empty(q) || !comp || !q)
 		return NULL;
 
 	/* Get the top of the heap which is min			*/

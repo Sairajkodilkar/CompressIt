@@ -92,6 +92,7 @@ void setflag(file *fp, int flag){
 
 /* reads the header in compressed file 			*/
 int read_binary_header(file *input){
+	return 0;
 }
 
 int read_file(file *input, void *ch, size_t count){

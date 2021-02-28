@@ -61,27 +61,24 @@ huffman_tree combine_node(huffman_tree left, huffman_tree right){
 
 	root->left = left;
 	root->right = right;
+	huffman_tree t = right ? right : left;
 
-	if(root->right){
-		copy(root->sym->code, right->sym->code, CODE_SIZE);
+	symbol *sroot = get_symbol(root);
+	symbol *st = get_symbol(t);
 
-		shift_right_by_one(root->sym->code);
+	if(t){
+		copy(get_code(sroot), get_code(st), CODE_SIZE);
 
-		set_codelength(root->sym, get_length(root->right->sym) - 1);
-	}
-	else if(root->left){
-		copy(root->sym->code, left->sym->code, CODE_SIZE);
+		shift_right_by_one(get_code(sroot));
 
-		shift_right_by_one(root->sym->code);
-
-		set_codelength(root->sym, get_length(root->left->sym) - 1);
+		set_codelength(sroot, get_length(st) - 1);
 	}
 	else {
 		codetype cp[CODE_SIZE] = {0};
 
-		set_codelength(root->sym, 0);
+		set_codelength(sroot, 0);
 
-		copy(root->sym->code, cp, CODE_SIZE);
+		copy(get_code(sroot), cp, CODE_SIZE);
 	}
 
 	return root;
@@ -96,7 +93,7 @@ void init_sym_table(symboltable st){
 
 	for(int i = 0; i < CHAR_RANGE; i++){
 		st[i] = null_sym;
-		st[i].ch = i;
+		set_char(&st[i], i);
 	}
 
 	return ;
@@ -104,12 +101,16 @@ void init_sym_table(symboltable st){
 
 long int build_sym_table(file *infile, symboltable st){
 
+	if(!infile || !st)
+		return -1;
+
 	unsigned char ch;
 	long int char_count = 0;
 
 	while(read_file(infile, &ch, 1)){
+		int fre = get_frequency(&st[ch]);
 
-		(st[ch].frequency)++;
+		set_frequency(&st[ch], fre + 1);
 
 		char_count++;
 	}
@@ -124,7 +125,7 @@ void build_priority_queue(
 		int (*valid) (void *)
 		)
 {
-	if(sym_que == NULL)
+	if(sym_que == NULL || st == NULL || comp == NULL || valid == NULL)
 		return;
 
 	symbol *sp = NULL;
@@ -142,6 +143,9 @@ void build_priority_queue(
 }
 
 huffman_tree build_huffman_tree(priority_queue *sym_que, int (*comp) (void *, void *)){
+	if(!sym_que || !comp)
+		return NULL;
+
 	huffman_tree left, right, root;
 
 	do {
@@ -174,8 +178,13 @@ void traverse(huffman_tree t, int code){
 
 int search_tree(huffman_tree codetree, bit b, char *ch){
 
-	static huffman_tree next = NULL;
+	if(!ch)
+		return -1;
 
+	if(!codetree)
+		return NOT_FOUND;
+
+	static huffman_tree next = NULL;
 
 	if(next == NULL){
 		next = codetree;
@@ -184,7 +193,7 @@ int search_tree(huffman_tree codetree, bit b, char *ch){
 	next = (b == 0) ? next->left : next->right;
 
 	if(isleaf(next, codetree)){
-		*ch = next->sym->ch;
+		*ch = get_char(get_symbol(next));
 		next = codetree;
 		return FOUND;
 	}
@@ -203,7 +212,9 @@ void _get_code_length(symboltable st, huffman_tree codetree, int depth){
 
 	if(codetree->left == NULL && codetree->right == NULL){
 
-		codetree->sym->codelength = depth;
+		symbol *s = get_symbol(codetree);
+
+		set_codelength(s, depth);
 
 		return;
 

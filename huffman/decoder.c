@@ -12,8 +12,8 @@
 
 int greaterthan(void *s1, void *s2){
 
-	symbol *sym1 = ((node *) s1)->sym,
-		   *sym2 = ((node *) s2)->sym;
+	symbol *sym1 = get_symbol((node *) s1),
+		   *sym2 = get_symbol((node *) s2);
 
 	if(get_length(sym1) > get_length(sym2))
 		return 1;

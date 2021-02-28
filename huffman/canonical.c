@@ -3,6 +3,10 @@
 
 /* code_one < code_two */
 int code_less_than(symbol *one, symbol *two){
+
+	if(!one || !two)
+		return -1;
+
 	int l1, l2;
 	l1 = get_length(one);
 	l2 = get_length(two);
@@ -40,6 +44,8 @@ int code_less_than(symbol *one, symbol *two){
 /* n goes from 0 to codelenght - 1 */
 
 bit get_nbit(symbol *s, int n){
+	if(!s)
+		return 2;
 
 	int length = s->codelength;
 
@@ -98,6 +104,10 @@ void plus_equal(codetype *code, int count){
 }
 
 void shift_left_by_one(codetype *code){
+
+	if(!code)
+		return;
+
 	codetype mask = 1, 
 			 prevmask = 1, 
 			 t,
@@ -129,6 +139,9 @@ void shift_left_by_one(codetype *code){
 }
 
 void shift_right_by_one(codetype *code){
+	if(!code)
+		return ;
+
 	codetype mask = 1, 
 			 t,
 			 prev_t;
@@ -173,10 +186,7 @@ void get_canonical_huffman_code(
 		int *codelength_count)
 {
 
-	if(st == NULL)
-		return;
-
-	if(codelength_count == NULL)
+	if(st == NULL || codelength_count == NULL)
 		return;
 
 	codetype code[CODE_SIZE] = {0};
@@ -200,13 +210,13 @@ void get_canonical_huffman_code(
 	int i;
 	for(i = 0; i < CHAR_RANGE; i++){
 
-		int length = st[i].codelength;
+		int length = get_length(&st[i]);
 		if(length > 0){
 			/* copy the base code for that codelenght  	*/
-			copy(st[i].code, next_code[st[i].codelength], CODE_SIZE);
+			copy(get_code(&st[i]), next_code[length], CODE_SIZE);
 
 			/* Increment code by one 					*/
-			plus_equal(next_code[st[i].codelength], 1);
+			plus_equal(next_code[length], 1);
 		}
 	}
 
