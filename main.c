@@ -1,16 +1,82 @@
 #include "huffman.h"
 #include "io.h"
+#include <unistd.h>
 
+#define NAMESIZE (512)
 
-int main(){
-	file *infile  = open_file("testfile.huff", O_RDONLY, S_IRWXU);
-	file *outfile = open_file("testfile2.txt", O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
+char optstring[] = "hlcxuf:";
 
-	if(outfile == NULL || infile == NULL){
-		printf("file open fail\n");
-		return 0;
+void usage(int status){
+	printf("Compressor");
+}
+
+int getflag(int option){
+	switch(option){
+		case 'h':
+			return HUFFMAN;
+			break;
+
+		case 'c':
+			return COMPRESSION;
+			break;
+
+		case 'x':
+			return EXTRACT;
+			break;
+
+		case 'f':
+			return FI;
+			break;
+
+		default:
+			return -1;
+	}
+}
+
+int main(int argc, char **argv){
+
+	char *inputfilename = NULL;
+
+	int option = 0, flag = 0;
+	long size;
+
+	while((option = getopt(argc, argv, optstring)) != -1){
+
+		if(option == '?'){
+			exit(1);
+		}
+
+		flag |= getflag(option);
+
+		if(ISCOMPRESSION(flag) && ISEXTRACT(flag)){
+			//raise("You can not specify both -x and -c");
+			exit(1);
+		}
+
+		if(option == 'f'){
+			/*
+			   if(inputfilename != NULL){
+			   raise("only one source can be specified");
+			   }
+			   */
+			inputfilename = optarg;
+			printf("filname %s\n", inputfilename);
+		}
+	}
+	if(!ISFILE(flag)){
+		raise("inputfile required");
 	}
 
-	huffman_decoder(infile, outfile);
+	if(ISCOMPRESSION(flag)){
+		if(ISHUFFMAN(flag)){
+			size = huffman_encoder(infile, outfile);
+		}
+	}
+	else if(ISEXTRACT(flag)){
+		if(ISHUFFMAN(flag)){
+			size = huffman_decoder(infile, outfile);
+		}
+	}
+
 	return 0;
 }

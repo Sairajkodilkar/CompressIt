@@ -28,10 +28,6 @@
 
 
 
-/* compression flags 					*/
-#define COMPRESSION_FLAG (1)
-#define HUFFMAN_FLAG (2)
-#define LZW_FLAG (4)
 
 typedef char bit;
 

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <errno.h>
+#include "huffman.h"
 
 #include "io.h"
 /* utimensat to set the time attribute of file */
@@ -70,15 +71,15 @@ file *open_file(char *name, int perm, int mode) {
 void setflag(file *fp, int flag){
 
 	/* for setting huffman or lzw flag compression flag must be set */
-	if(flag & COMPRESSION_FLAG){
-		fp->atrb.compress = 1;
+	if(ISCOMPRESSION(flag)){
+		fp->atrb.compress = COMPRESSION;
 		
-		if(flag & LZW_FLAG){
-			fp->atrb.method = 1;
+		if(ISLZW(flag)){
+			fp->atrb.method = LZW;
 		}
 		else{
 			/* default huffman is consider 	*/
-			fp->atrb.method = 0;
+			fp->atrb.method = HUFFMAN;
 		}
 	}
 	return;
