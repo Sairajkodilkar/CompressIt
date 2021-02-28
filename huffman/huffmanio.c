@@ -13,7 +13,6 @@ int write_count(file *outfile, symboltable st){
 		ch = (unsigned char) get_length(&(st[i]));
 		write_file(outfile, &ch, 1);
 	}
-	printf("\n");
 	return i;
 }
 
@@ -28,13 +27,17 @@ int write_codes(file *infile, file *outfile, symboltable st){
 	while(read_file(infile, &ch, 1) != 0){
 
 		int codelength = get_length(&st[ch]);
+		//printf("codelength %c: %d : ", ch, codelength);
+		//print_code(st[ch].code);
 
 		for(int i = 0; i < codelength; i++){
 
 			b = get_nbit(&st[ch], i);
+		//	printf("%d ", b);
 
 			count += write_bit(outfile, b, NO_EOF);
 		}
+		//printf("\n");
 	}
 	count += write_bit(outfile, b, EOF_FLAG);
 

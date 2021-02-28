@@ -1,5 +1,42 @@
 #include "huffman.h"
 
+
+/* code_one < code_two */
+int code_less_than(symbol *one, symbol *two){
+	int l1, l2;
+	l1 = get_length(one);
+	l2 = get_length(two);
+
+	if(l1 < l2)
+		return 1;
+
+	if(l2 > l1)
+		return 0;
+
+	else{
+		codetype *code_one = one->code;
+		codetype *code_two = two->code;
+
+		int bit_size = sizeof(codetype) * 8;
+		int index = CODE_SIZE - ((l1 - 1) / bit_size) - 1;
+
+		for(; index < CODE_SIZE; index++){
+
+			if(code_one[index] < code_two[index]){
+				return 1;
+			}
+			else if(code_one[index] > code_two[index]){
+				return 0;
+			}
+			else
+				continue;
+		}
+	}
+
+	return 0;
+
+}
+
 /* n goes from 0 to codelenght - 1 */
 
 bit get_nbit(symbol *s, int n){
@@ -17,7 +54,7 @@ bit get_nbit(symbol *s, int n){
 	int bit_size = sizeof(codetype) * 8;
 
 	//global index
-	int index = CODE_SIZE - (n / bit_size) - 1;
+	int index = CODE_SIZE - (int)(n / bit_size) - 1;
 
 	//local index
 	codetype bit_index = n % bit_size;

@@ -24,6 +24,7 @@ int lessthan(void *s1, void *s2){
 	return ((node *) s1)->sym->frequency < ((node *) s2)->sym->frequency;
 }
 
+
 int greaterthan(void *s1, void *s2){
 
 	symbol *sym1 = ((node *) s1)->sym,
@@ -34,9 +35,7 @@ int greaterthan(void *s1, void *s2){
 
 	else if(get_length(sym1) == get_length(sym2)){
 
-		bit b1 = get_nbit(sym1, 0);
-		
-		return (b1 == 0) ? 1 : 0;
+		return code_less_than(sym1, sym2);
 	}
 
 	return 0;
@@ -78,7 +77,13 @@ huffman_tree combine_node(huffman_tree left, huffman_tree right){
 
 		set_codelength(root->sym, get_length(root->left->sym) - 1);
 	}
+	else {
+		codetype cp[CODE_SIZE] = {0};
 
+		set_codelength(root->sym, 0);
+
+		copy(root->sym->code, cp, CODE_SIZE);
+	}
 
 	return root;
 }
@@ -155,13 +160,16 @@ huffman_tree build_huffman_tree(priority_queue *sym_que, int (*comp) (void *, vo
 }
 
 
-void traverse(huffman_tree t){
+void traverse(huffman_tree t, int code){
 	if(t == NULL)
 		return;
 
-	printf("%c ", t->sym->ch);
-	traverse(t->left);
-	traverse(t->right);
+	if(isleaf(t)){
+		printf("%c , %d", t->sym->ch, code);
+		print_code(t->sym->code);
+	}
+	traverse(t->left, (code << 1) + 0);
+	traverse(t->right, (code << 1) + 1);
 
 }
 
@@ -212,6 +220,7 @@ void init_code_lenght_count(symboltable sym_table, int *codelength_count) {
 }
 
 void destroy_huffman_tree(huffman_tree *codetree){
+
 	if(!codetree || !(*codetree))
 		return;
 
@@ -239,7 +248,7 @@ int valid_sym(void *s){
 long huffman_encoder(file *infile, file *outfile){
 
 	symboltable sym_table;
-init_sym_table(sym_table);
+	init_sym_table(sym_table);
 
 	long int n = build_sym_table(infile, sym_table);
 
@@ -266,6 +275,8 @@ init_sym_table(sym_table);
 	/* generates canonical huffman code for each symbol */
 	get_canonical_huffman_code(sym_table, codelength_count);
 
+	traverse(codetree, 0);
+
 	/* write huffman code to the file 					*/
 	long filesize = write_huffman_code(sym_table, infile, outfile, codelength_count);
 
@@ -287,7 +298,14 @@ void print_code(codetype *code){
 	return;
 }
 
+long inflate_file(
+		file *infile, 
+		file *outfile, 
+		huffman_tree codetree, 
+		long char_size);
+
 long huffman_decoder(file *infile, file *outfile){
+
 	if(infile == NULL || outfile == NULL){
 		return -1;
 	}
@@ -305,11 +323,6 @@ long huffman_decoder(file *infile, file *outfile){
 	long size = read_code_length_count(infile, sym_table, CHAR_RANGE);
 
 	init_code_lenght_count(sym_table, codelength_count);
-	for(int i = 0; i < CHAR_RANGE; i++){
-		printf("%d ", codelength_count[i]);
-	}
-	printf("\n");
-
 
 	//generate code from that count.
 	get_canonical_huffman_code(sym_table, codelength_count);
@@ -320,15 +333,77 @@ long huffman_decoder(file *infile, file *outfile){
 	build_priority_queue(&sym_que, sym_table, &greaterthan, &valid_length);
 
 	//generate the tree from that code.
-	//huffman_tree codetree = build_huffman_tree(&sym_que, &greaterthan);
+	huffman_tree codetree = build_huffman_tree(&sym_que, &greaterthan);
+	traverse(codetree, 0);
+
 
 	//read file bit by bit till char count is zero and decode the character.
 
-	//long file_size = inflate_file(infile, outfile, codetree);
+	long file_size = inflate_file(infile, outfile, codetree, get_char_size(infile));
 
 
 	return 0;
 	//return file_size;
+}
+
+enum status {NOT_FOUND, FOUND};
+
+int isleaf(huffman_tree n, huffman_tree root){
+
+	if(n && n->left == NULL && n->right == NULL && n != root)
+		return 1;
+
+	return 0;
+}
+
+int search_tree(huffman_tree codetree, bit b, char *ch){
+	static huffman_tree next = NULL;
+
+
+	if(next == NULL){
+		next = codetree;
+	}
+
+	next = (b == 0) ? next->left : next->right;
+
+	if(isleaf(next, codetree)){
+		*ch = next->sym->ch;
+		next = codetree;
+		return FOUND;
+	}
+	else{
+		return NOT_FOUND;
+	}
+
+	return -1;
+}
+
+long inflate_file(
+		file *infile, 
+		file *outfile, 
+		huffman_tree codetree, 
+		long char_size)
+{
+
+	bit b;
+	long count = 0;
+	int found;
+	char ch;
+
+	while(count != char_size){
+
+		read_bit(infile, &b);
+
+		found = search_tree(codetree, b, &ch);
+
+		if(found){
+			count++;
+			write_file(outfile, &ch, sizeof(ch));
+		}
+
+	}
+	//printf("\n");
+	return count;
 }
 
 

@@ -7,6 +7,8 @@ void get_canonical_huffman_code(
 		symboltable st,
 		int *codelength_count);
 
+int code_less_than(symbol *one, symbol *two);
+
 void shift_left_by_one(codetype *code);
 
 void shift_right_by_one(codetype *code);
