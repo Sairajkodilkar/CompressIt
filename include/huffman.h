@@ -18,13 +18,14 @@ typedef uint64_t dcodetype;
 #define DCODETYPE_MAX UINT64_MAX 
 
 /* compression flags 					*/
-enum {COMPRESSION = 1, EXTRACT = 2, HUFFMAN = 4, LZW = 8, FI = 16};
+enum {COMPRESSION = 1, EXTRACT = COMPRESSION << 1, HUFFMAN = EXTRACT << 1, LZW = HUFFMAN << 1, FI = LZW << 1, HELP = FI << 1};
 
 #define ISCOMPRESSION(flag) ((flag) & COMPRESSION)
 #define ISEXTRACT(flag) ((flag) & EXTRACT)
 #define ISHUFFMAN(flag) ((flag) & HUFFMAN)
 #define ISLZW(flag) ((flag) & LZW)
 #define ISFILE(flag) ((flag) & FI)
+#define ISHELP(flag) ((flag) & HELP)
 
 typedef struct symbol {
 	
