@@ -13,7 +13,6 @@
 #define WCMODE (O_CREAT | O_WRONLY)
 #define MAXEXT 5
 
-char optstring[] = "hlcxuf:";
 
 void usage(int status, char **argv){
 	if(status){
@@ -87,14 +86,21 @@ int getflag(int option){
 			return HELP;
 			break;
 
+		case 'o':
+			return OUTPUT;
+			break;
+
 		default:
 			return -1;
 	}
 }
 
+const char optstring[] = "hlcxuf:o:";
+
 int main(int argc, char **argv){
 
 	char *inputfilename = NULL;
+	char *outfilename = NULL;
 
 	int option = 0, flag = 0;
 	long size;
@@ -131,17 +137,14 @@ int main(int argc, char **argv){
 				exit(errno);
 			}
 		}
+		if(option == 'o'){
+			outfilename = optarg;
+		}
 	}
+
 	if(!ISFILE(flag)){
 		raise("inputfile required", argv);
 		usage(1, argv);
-	}
-	char *outfilename = NULL;
-
-	if(outfilename == NULL){
-		free(outfilename);
-		perror("compression");
-		exit(errno);
 	}
 
 	if(!ISHUFFMAN(flag) && !ISLZW(flag)){
@@ -150,12 +153,15 @@ int main(int argc, char **argv){
 		usage(1, argv);
 	}
 
+
 	if(ISCOMPRESSION(flag)){
 		if(ISHUFFMAN(flag)){
-			outfilename = attach(inputfilename, HUFFEXT);
 			if(outfilename == NULL){
-				raise("invalid filename\n", argv);
-				exit(1);
+				outfilename = attach(inputfilename, HUFFEXT);
+				if(outfilename == NULL){
+					raise("invalid filename\n", argv);
+					exit(1);
+				}
 			}
 			outfile = open_file(outfilename, WCMODE, PERM);
 			size = huffman_encoder(infile, outfile);
@@ -163,10 +169,13 @@ int main(int argc, char **argv){
 	}
 	else if(ISEXTRACT(flag)){
 		if(ISHUFFMAN(flag)){
-			outfilename = detach(inputfilename);
 			if(outfilename == NULL){
-				raise("invalid filename\n", argv);
-				exit(1);
+				outfilename = detach(inputfilename);
+				attach(outfilename, TXTEXT);
+				if(outfilename == NULL){
+					raise("invalid filename\n", argv);
+					exit(1);
+				}
 			}
 			outfile = open_file(outfilename, WCMODE, PERM);
 			size = huffman_decoder(infile, outfile);
@@ -177,7 +186,10 @@ int main(int argc, char **argv){
 		free(outfilename);
 		usage(1, argv);
 	}
-	free(outfilename);
+	close_file(infile);
+	infile = NULL;
+	close_file(outfile);
+	outfile = NULL;
 
 	//calculate percentage;
 

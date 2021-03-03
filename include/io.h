@@ -117,6 +117,8 @@ int write_binary_header(file *output, file *infile);
 
 int write_bit(file *output, bit in_bit, int eof_flag);
 
+void close_file(file *fi);
+
 #endif
 
 
