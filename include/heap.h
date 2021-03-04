@@ -12,7 +12,7 @@
 typedef struct priority_queue {
 
 	/* priority queue to contain atmost 256 symbols 			*/
-	node *queue[CHAR_RANGE];
+	void *queue[CHAR_RANGE];
 
 	int queue_size;
 
@@ -25,7 +25,7 @@ typedef struct priority_queue {
 void init_priority_queue(priority_queue *q);
 
 void queue_insert(priority_queue *q,  node *nd, int (*comp) (void *, void *));
-node *queue_extract_min(priority_queue *q, int (*comp) (void *, void *));
+void *queue_extract_min(priority_queue *q, int (*comp) (void *, void *));
 
 
 /*! 
@@ -34,7 +34,7 @@ node *queue_extract_min(priority_queue *q, int (*comp) (void *, void *));
  * @param[in] first pointer to the pointer of node
  * @param[in] second pointer to the pointer of node
  */
-static inline void exchange(node **a, node **b){
+static inline void exchange(void **a, void **b){
 	node *temp = *a;
 	*a = *b;
 	*b = temp;

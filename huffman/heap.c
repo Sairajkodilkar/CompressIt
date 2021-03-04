@@ -1,6 +1,5 @@
 /* Build tree with min variance such that internal nodes has less priority than extern node */
 #include "heap.h"
-#include "huffman.h"
 
 
 void min_heapify(priority_queue *q, int i);
@@ -81,13 +80,13 @@ void queue_insert(priority_queue *q,  node *nd, int (*comp)(void *, void *)){
 	q->queue_size++;
 }
 
-node *queue_extract_min(priority_queue *q, int (*comp) (void *, void *)){
+void *queue_extract_min(priority_queue *q, int (*comp) (void *, void *)){
 	/* check if queue is empty 						*/
 	if(queue_is_empty(q) || !comp || !q)
 		return NULL;
 
 	/* Get the top of the heap which is min			*/
-	node *min_node = q->queue[0];
+	void *min_node = q->queue[0];
 
 	int i = --q->queue_size;
 
