@@ -35,7 +35,7 @@ void *queue_extract_min(priority_queue *q, int (*comp) (void *, void *));
  * @param[in] second pointer to the pointer of node
  */
 static inline void exchange(void **a, void **b){
-	node *temp = *a;
+	void *temp = *a;
 	*a = *b;
 	*b = temp;
 	return;
