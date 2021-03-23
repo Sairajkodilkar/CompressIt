@@ -1,7 +1,7 @@
 #include "dict.h"
 
 
-void init_trienode(struct trie *t, int count, char ch){
+void init_trienode(struct trie *t, int count, unsigned char ch){
 	if(!t)
 		return;
 
@@ -34,7 +34,7 @@ void init_dict(dict *dictionary){
 struct trie *search_child(
 		struct trie *root,
 		struct trie **sibling,
-		char ch)
+		unsigned char ch)
 {
 	if(root == NULL || sibling == NULL)
 		return NULL;
@@ -57,7 +57,7 @@ struct trie *search_child(
  * when it is not found in any of the child it is inserted as new child
  * and ind -1 is returned for not found 
  */
-index insert_string(dict *diction, char ch, int *reset){
+index insert_string(dict *diction, unsigned char ch, int *reset){
 	static struct trie *temp;
 	if(diction == NULL)
 		return -2;
@@ -105,7 +105,30 @@ index get_ind(dict *dict, char *string){
 	return 0;
 }
 
+void _destroy_dict(struct trie *root){
+	if(root == NULL)
+		return;
+
+	struct trie *next = root->left;
+	while(next){
+		_destroy_dict(next);
+		next = next->sibling;
+	}
+	free(root);
+	return;
+}
+
 void destroy_dict(dict *dict){
+	if(dict == NULL || dict->root == NULL){
+		return;
+	}
+	struct trie *next = dict->root->left;
+	struct trie *temp = NULL;
+	while(next){
+		temp = next->sibling;
+		_destroy_dict(next);
+		next = temp;
+	}
 	return;
 }
 

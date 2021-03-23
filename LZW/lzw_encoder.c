@@ -27,8 +27,8 @@ long lzw_encoder(file *infile, file *outfile){
 	char ch = '\0';
 
 	int reset = 1;
-	index status = 0,
-		  previndex = -1;
+	index status = 0;
+	uint16_t previndex = -1;
 
 	while(read_file(infile, &ch, sizeof(ch)) > 0){
 
@@ -44,7 +44,7 @@ long lzw_encoder(file *infile, file *outfile){
 
 			status = insert_string(&code_dict, ch, &reset);
 		}
-		previndex = status;
+		previndex = (int16_t)status;
 	}
 	destroy_dict(&code_dict);
 	return filesize;

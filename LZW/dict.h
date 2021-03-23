@@ -24,7 +24,7 @@ typedef int32_t index;
 
 struct trie {
 
-	char ch;
+	unsigned char ch;
 	index ind;
 
 	struct trie *sibling,
@@ -47,7 +47,7 @@ typedef struct dict {
 void init_dict(dict *dictionary);
 
 //enters the string in trie 
-index insert_string(dict *dictionary, char ch, int *reset);
+index insert_string(dict *dictionary, unsigned char ch, int *reset);
 
 //searchs for the string index in the trie
 index get_index(dict *dict, char *string);
