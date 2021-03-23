@@ -43,7 +43,7 @@ long huffman_encoder(file *infile, file *outfile){
 	huffman_tree codetree = build_huffman_tree(&sym_que, &lessthan);
 
 
-	/* traverse through tree and find its code lenght 	*/
+	/* traverse through tree and find its code length 	*/
 	get_code_length(sym_table, codetree);
 
 

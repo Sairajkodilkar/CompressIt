@@ -19,7 +19,7 @@ void init_dict(dict *dictionary){
 		return;
 
 	dictionary->count = 0;
-	dictionary->maxlength = MAXLENGTH ;
+	dictionary->maxlength = MAXLENGTH;
 
 	dictionary->root = (struct trie *) malloc(sizeof(struct trie));
 
@@ -62,16 +62,21 @@ index insert_string(dict *diction, char ch, int *reset){
 	if(diction == NULL)
 		return -2;
 
-
-	if(diction->root == NULL)
-		return -2;
-
 	if(*reset){
 		temp = diction->root;
 		*reset = 0;
 	}
 
-	struct trie *sibling = NULL,
+	if(diction->root == NULL)
+		return -2;
+
+
+	if(diction->count >= MAXLENGTH){
+		return -1;
+	}
+
+	struct trie 
+		*sibling = NULL,
 		*next = NULL;
 
 	next = search_child(temp, &sibling, ch);

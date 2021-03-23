@@ -6,6 +6,7 @@
 
 #define MAXLENGTH (1<<16)
 
+
 /* Builds the trie tree of the form
  * 			   root
  *            /    \
@@ -19,7 +20,7 @@
  */
 
 
-typedef int index;
+typedef int32_t index;
 
 struct trie {
 
@@ -51,6 +52,7 @@ index insert_string(dict *dictionary, char ch, int *reset);
 //searchs for the string index in the trie
 index get_index(dict *dict, char *string);
 
+void destroy_dict(dict *dict);
 
 
 #endif
