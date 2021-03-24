@@ -9,8 +9,9 @@
 
 
 typedef struct entry {
-	index key;
+	int key;
 	char *str;
+	struct entry *next;
 } entry;
 
 
@@ -24,13 +25,13 @@ typedef struct hash {
 
 void init_hash(hash *hp, int maxsize);
 
-/* str must be already allocated by user 			*/
+/* str must be already allocated by user		 			*/
 int hinsert(hash *hp, int key, char *str);
 
 /* searches the key and returns the pointer to the string 	*/
 char *hsearch(hash *hp, int key);
 
-/* deletes the entry and return string associated with it */
+/* deletes the entry and return string associated with it 	*/
 char *hdelete(hash *hp, int key);
 
 
