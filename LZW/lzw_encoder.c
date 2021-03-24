@@ -2,6 +2,9 @@
 #include "lzw.h"
 #include "dict.h"
 
+#include <limits.h>
+
+#define MAXSIZE (1 << 16)
 
 /* NOTE : max code is limited to 2 byte 
  * which limits the dictionary to 2^16 = 64k 
@@ -16,7 +19,9 @@ long lzw_encoder(file *infile, file *outfile){
 	long filesize = 0;
 
 	dict code_dict;
-	init_dict(&code_dict);
+
+	/* Maximum index possible is UINT16_MAX 				*/
+	init_dict(&code_dict, (index) UINT16_MAX);
 
 	/* initialize the dictionary with all characters		*/
 	if((filesize += insert_chars(&code_dict)) < 0){
@@ -44,8 +49,12 @@ long lzw_encoder(file *infile, file *outfile){
 
 			status = insert_string(&code_dict, ch, &reset);
 		}
-		previndex = (int16_t)status;
+		previndex = (uint16_t)status;
 	}
+
+	/* end of the file condition */
+	filesize += write_file(outfile, &previndex, sizeof(previndex));
+
 	destroy_dict(&code_dict);
 	return filesize;
 }

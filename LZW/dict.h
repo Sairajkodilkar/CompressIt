@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAXLENGTH (1<<16)
 
 
 /* Builds the trie tree of the form
@@ -37,8 +36,8 @@ typedef struct dict {
 
 	struct trie *root;
 
-	int count;
-	int maxlength;
+	index count;
+	index maxlength;
 
 } dict;
 

@@ -14,12 +14,12 @@ void init_trienode(struct trie *t, int count, unsigned char ch){
 }
 
 
-void init_dict(dict *dictionary){
+void init_dict(dict *dictionary, index maxsize){
 	if(dictionary == NULL)
 		return;
 
 	dictionary->count = 0;
-	dictionary->maxlength = MAXLENGTH;
+	dictionary->maxlength = maxsize;
 
 	dictionary->root = (struct trie *) malloc(sizeof(struct trie));
 
@@ -71,7 +71,7 @@ index insert_string(dict *diction, unsigned char ch, int *reset){
 		return -2;
 
 
-	if(diction->count >= MAXLENGTH){
+	if(diction->count >= diction->maxsize){
 		return -1;
 	}
 
