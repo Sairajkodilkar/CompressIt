@@ -110,9 +110,11 @@ void _destroy_dict(struct trie *root){
 		return;
 
 	struct trie *next = root->left;
+	struct trie *temp = NULL;
 	while(next){
+		temp = next->sibling;
 		_destroy_dict(next);
-		next = next->sibling;
+		next = temp;
 	}
 	free(root);
 	return;
