@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <limits.h>
 
 
 
@@ -19,12 +21,13 @@
  */
 
 
-typedef int32_t index;
+typedef int32_t dict_index;
+typedef uint32_t udict_index;
 
 struct trie {
 
 	unsigned char ch;
-	index ind;
+	dict_index ind;
 
 	struct trie *sibling,
 				*left, 
@@ -36,20 +39,20 @@ typedef struct dict {
 
 	struct trie *root;
 
-	index count;
-	index maxlength;
+	dict_index count;
+	dict_index maxlength;
 
 } dict;
 
 
 //init the dictionary
-void init_dict(dict *dictionary);
+void init_dict(dict *dictionary, dict_index maxsize);
 
 //enters the string in trie 
-index insert_string(dict *dictionary, unsigned char ch, int *reset);
+dict_index insert_string(dict *dictionary, unsigned char ch, int *reset);
 
-//searchs for the string index in the trie
-index get_index(dict *dict, char *string);
+//searchs for the string dict_index in the trie
+dict_index get_dict_index(dict *dict, char *string);
 
 void destroy_dict(dict *dict);
 

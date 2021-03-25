@@ -9,7 +9,7 @@ int insert_symbols(hash *hp){
 	int i;
 	for(i = 0; i < 256; i++){
 		str[0] = (char ) i;
-		char *t = strdup(str, 1);
+		char *t = strndup(str, 1);
 		hinsert(hp, i, t);
 	}
 	return i;
@@ -43,10 +43,10 @@ long lzw_decoder(file *infile, file *outfile){
 	init_hash(&hashtable, LZWCODE_MAX);
 	long filesize = 0;
 
-	int index = 0;
-	index += insert_symbols(&hashtable);
+	int dict_index = 0;
+	dict_index += insert_symbols(&hashtable);
 
-	lzw_codetype code = t;
+	lzw_codetype code = 0;
 
 	/* read two byte code from compressed file (infile)			*/
 	if(read_file(infile, &code, sizeof(code)) <= 0){
@@ -62,18 +62,18 @@ long lzw_decoder(file *infile, file *outfile){
 		hdestroy(&hashtable);
 		return -1;
 	}
-	write_string(outfile, pstr);
+	filesize += write_string(outfile, pstr);
 
 	while(read_file(infile, &code, sizeof(code)) > 0){
 		str = hsearch(&hashtable, (int) code);
 		if(str == NULL) {
-			hinsert(&hashtable, (str = concatinate(pstr, pstr[0])), index);
+			hinsert(&hashtable, dict_index, (str = concatinate(pstr, pstr[0])));
 		}
 		else {
-			hinsert(&hashtable, concatinate(pstr, str[0]), index);
+			hinsert(&hashtable, dict_index, concatinate(pstr, str[0]));
 		}
-		write_string(outfile, str);
-		index++;
+		filesize += write_string(outfile, str);
+		dict_index++;
 		pstr = str;
 	}
 	hdestroy(&hashtable);

@@ -33,8 +33,8 @@ long lzw_encoder(file *infile, file *outfile){
 
 	dict code_dict;
 
-	/* Maximum index possible is UINT16_MAX 				*/
-	init_dict(&code_dict, (index) LZWCODE_MAX);
+	/* Maximum dict_index possible is UINT16_MAX 				*/
+	init_dict(&code_dict, LZWCODE_MAX);
 
 	/* initialize the dictionary with all characters		*/
 	if(insert_chars(&code_dict) < 0){
@@ -45,8 +45,8 @@ long lzw_encoder(file *infile, file *outfile){
 	char ch = '\0';
 
 	int reset = 1;
-	index status = 0;
-	lzw_codetype previndex = -1;
+	dict_index status = 0;
+	lzw_codetype prevdict_index = -1;
 
 	while(read_file(infile, &ch, sizeof(ch)) > 0){
 
@@ -58,15 +58,15 @@ long lzw_encoder(file *infile, file *outfile){
 		else if(status == -1){
 			reset = 1;
 
-			filesize += write_file(outfile, &previndex, sizeof(previndex));
+			filesize += write_file(outfile, &prevdict_index, sizeof(prevdict_index));
 
 			status = insert_string(&code_dict, ch, &reset);
 		}
-		previndex = (uint16_t)status;
+		prevdict_index = (lzw_codetype)status;
 	}
 
 	/* end of the file condition */
-	filesize += write_file(outfile, &previndex, sizeof(previndex));
+	filesize += write_file(outfile, &prevdict_index, sizeof(prevdict_index));
 
 	destroy_dict(&code_dict);
 	return filesize;

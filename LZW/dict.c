@@ -14,7 +14,7 @@ void init_trienode(struct trie *t, int count, unsigned char ch){
 }
 
 
-void init_dict(dict *dictionary, index maxsize){
+void init_dict(dict *dictionary, dict_index maxsize){
 	if(dictionary == NULL)
 		return;
 
@@ -57,7 +57,7 @@ struct trie *search_child(
  * when it is not found in any of the child it is inserted as new child
  * and ind -1 is returned for not found 
  */
-index insert_string(dict *diction, unsigned char ch, int *reset){
+dict_index insert_string(dict *diction, unsigned char ch, int *reset){
 	static struct trie *temp;
 	if(diction == NULL)
 		return -2;
@@ -71,7 +71,7 @@ index insert_string(dict *diction, unsigned char ch, int *reset){
 		return -2;
 
 
-	if(diction->count >= diction->maxsize){
+	if(diction->count >= diction->maxlength){
 		return -1;
 	}
 
@@ -101,7 +101,7 @@ index insert_string(dict *diction, unsigned char ch, int *reset){
 }
 
 //searchs for the string ind in the trie
-index get_ind(dict *dict, char *string){
+dict_index get_ind(dict *dict, char *string){
 	return 0;
 }
 

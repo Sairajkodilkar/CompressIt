@@ -37,14 +37,14 @@ entry **search(entry **start, int key){
 
 entry *getnewentry(){
 	entry *temp = (entry *) malloc(sizeof(entry));
-	return NULL;
+	return temp;
 }
 
 char *hinsert(hash *hp, int key, char *str){
-	/* get hashtable index from hash function */
-	int index = __hashfunc(key);
+	/* get hashtable dict_index from hash function */
+	int dict_index = __hashfunc(key);
 	/* go to that row and search for key linearly in linked list */
-	entry **found = search(&(hp->entries[index]), key);
+	entry **found = search(&(hp->entries[dict_index]), key);
 	if(found == NULL){
 		return NULL;
 	}
@@ -71,9 +71,9 @@ char *hinsert(hash *hp, int key, char *str){
 }
 
 char *hsearch(hash *hp, int key){
-	int index = __hashfunc(key);
+	int dict_index = __hashfunc(key);
 
-	entry **found = search(&(hp->entries[index]), key);
+	entry **found = search(&(hp->entries[dict_index]), key);
 
 	if(found == NULL || *found == NULL){
 		return NULL;
@@ -84,9 +84,9 @@ char *hsearch(hash *hp, int key){
 }
 
 char *hdelete(hash *hp, int key){
-	int index = __hashfunc(key);
+	int dict_index = __hashfunc(key);
 
-	entry **found = search(&(hp->entries[index]), key);
+	entry **found = search(&(hp->entries[dict_index]), key);
 
 	if(found == NULL){
 		return NULL;
