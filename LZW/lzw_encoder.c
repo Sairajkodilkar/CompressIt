@@ -11,6 +11,19 @@
  * longest length possible is log2(file length count)
  */
 
+long insert_chars(dict *code_dict){
+	unsigned char ch = 1;
+	int reset = 1;
+	long size = 0;
+	for(int i = 1; i <= UCHAR_MAX; i++, ch++){
+		reset = 1;
+		if(insert_string(code_dict, ch, &reset) == -2)
+			return -1;
+		size++;
+	}
+	return size;
+}
+
 long lzw_encoder(file *infile, file *outfile){
 
 	if(infile == NULL || outfile == NULL || infile == outfile)
@@ -21,10 +34,10 @@ long lzw_encoder(file *infile, file *outfile){
 	dict code_dict;
 
 	/* Maximum index possible is UINT16_MAX 				*/
-	init_dict(&code_dict, (index) UINT16_MAX);
+	init_dict(&code_dict, (index) LZWCODE_MAX);
 
 	/* initialize the dictionary with all characters		*/
-	if((filesize += insert_chars(&code_dict)) < 0){
+	if(insert_chars(&code_dict) < 0){
 		destroy_dict(&code_dict);
 		return -1;
 	}
@@ -33,7 +46,7 @@ long lzw_encoder(file *infile, file *outfile){
 
 	int reset = 1;
 	index status = 0;
-	uint16_t previndex = -1;
+	lzw_codetype previndex = -1;
 
 	while(read_file(infile, &ch, sizeof(ch)) > 0){
 

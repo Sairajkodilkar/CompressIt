@@ -1,4 +1,5 @@
 #include "hash.h"
+#include <stdlib.h>
 
 void init_hash(hash *hp, int maxsize){
 	hp->size = 0;
@@ -25,10 +26,18 @@ int __hashfunc(int key){
 }
 
 entry **search(entry **start, int key){
+	if(start == NULL){
+		return NULL;
+	}
 	while(*start != NULL && ((*start)->key != key)){
-		start = (*start)->next;
+		start = &((*start)->next);
 	}
 	return start;
+}
+
+entry *getnewentry(){
+	entry *temp = (entry *) malloc(sizeof(entry));
+	return NULL;
 }
 
 char *hinsert(hash *hp, int key, char *str){
@@ -36,12 +45,18 @@ char *hinsert(hash *hp, int key, char *str){
 	int index = __hashfunc(key);
 	/* go to that row and search for key linearly in linked list */
 	entry **found = search(&(hp->entries[index]), key);
+	if(found == NULL){
+		return NULL;
+	}
 
 	if(*found == NULL){
-		if(hp->size >= maxsize){
+		if(hp->size >= hp->maxsize){
 			return NULL;
 		}
 		*found = getnewentry();
+		if(*found == NULL){
+			return NULL;
+		}
 		init_entry(*found, key, str, NULL);
 		hp->size++;
 		return str;
@@ -60,7 +75,7 @@ char *hsearch(hash *hp, int key){
 
 	entry **found = search(&(hp->entries[index]), key);
 
-	if(*found == NULL){
+	if(found == NULL || *found == NULL){
 		return NULL;
 	}
 	else{
@@ -73,6 +88,9 @@ char *hdelete(hash *hp, int key){
 
 	entry **found = search(&(hp->entries[index]), key);
 
+	if(found == NULL){
+		return NULL;
+	}
 	if(*found == NULL){
 		return NULL;
 	}
@@ -84,5 +102,21 @@ char *hdelete(hash *hp, int key){
 		hp->size--;
 		return str;
 	}
+}
+
+void hdestroy(hash *hp){
+	if(hp == NULL)
+		return;
+	entry *temp, *prev;
+	for(int i = 0; i < _TABLESIZE; i++){
+		temp = hp->entries[i];
+		while(temp){
+			prev = temp;
+			temp = temp->next;
+			free(prev);
+		}
+		hp->entries[i] = NULL;
+	}
+	hp->size = 0;
 }
 
