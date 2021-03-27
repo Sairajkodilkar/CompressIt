@@ -10,7 +10,8 @@
 
 typedef struct entry {
 	int key;
-	char *str;
+	unsigned char *str;
+	int size;
 	struct entry *next;
 } entry;
 
@@ -25,20 +26,15 @@ typedef struct hash {
 
 void init_hash(hash *hp, int maxsize);
 
+entry *getnewentry(void);
+
 /* str must be already allocated by user		 			*/
-char *hinsert(hash *hp, int key, char *str);
+entry *hinsert(hash *hp, entry *e);
 
 /* searches the key and returns the pointer to the string 	*/
-char *hsearch(hash *hp, int key);
-
-/* deletes the entry and return string associated with it 	*/
-char *hdelete(hash *hp, int key);
+entry *hsearch(hash *hp, entry *e);
 
 void hdestroy(hash *hp);
-
-
-
-
 
 
 #endif 

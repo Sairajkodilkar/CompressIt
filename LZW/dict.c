@@ -18,7 +18,7 @@ void init_dict(dict *dictionary, dict_index maxsize){
 	if(dictionary == NULL)
 		return;
 
-	dictionary->count = 0;
+	dictionary->count = -1;
 	dictionary->maxlength = maxsize;
 
 	dictionary->root = (struct trie *) malloc(sizeof(struct trie));

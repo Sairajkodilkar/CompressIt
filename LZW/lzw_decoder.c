@@ -1,39 +1,35 @@
-#include <string.h>
-
 #include "lzw.h"
 #include "hash.h"
 
-int insert_symbols(hash *hp){
+typedef unsigned char uchar;
 
-	char str[] = "a";
+int insert_symbols(hash *hp){
+	entry e;
+	e.size = 1;
 	int i;
 	for(i = 0; i < 256; i++){
-		str[0] = (char ) i;
-		char *t = strndup(str, 1);
-		hinsert(hp, i, t);
+		uchar *t = (uchar *) malloc(sizeof(uchar));
+		*t = (uchar) i;
+		e.key = i;
+		e.str = t;
+		hinsert(hp, &e);
 	}
 	return i;
 }
 
-int write_string(file *outfile, char *str){
-	int l = strlen(str);
-	return write_file(outfile, str, l);
+int write_ustring(file *outfile, uchar *str, int size){
+	return write_file(outfile, str, size);
 }
 
-char *concatinate(char *str, char ch){
-	int l = strlen(str);
-	char *conc = (char *) malloc(sizeof(char) * (l + 2));
-
-	if(conc == NULL){
+char *concatinate(uchar *str, int size, uchar ch){
+	uchar *nstr = (uchar *) malloc(sizeof(uchar) * (size + 1));
+	if(nstr == NULL)
 		return NULL;
+	for(int i = 0; i < size; i++){
+		nstr[i] = str[i];
 	}
-
-	for(int i = 0; i < l; i++){
-		conc[i] = str[i];
-	}
-	conc[l] = ch;
-	conc[l + 1] = '\0';
-	return conc;
+	nstr[size] = ch;
+	return nstr;
 }
 
 long lzw_decoder(file *infile, file *outfile){
@@ -54,29 +50,44 @@ long lzw_decoder(file *infile, file *outfile){
 		hdestroy(&hashtable);
 		return 0;
 	}
-	char *str, *pstr ;
+	entry *e, *pe, *temp;
+	e = getnewentry();
+	temp = pe = getnewentry();
 
-	pstr = hsearch(&hashtable, (int) code);
+	pe->key = (int ) code;
 
-	if(pstr == NULL){
+	pe = hsearch(&hashtable, pe);
+
+	if(pe == NULL){
+		free(e);
+		free(temp);
 		hdestroy(&hashtable);
 		return -1;
 	}
-	filesize += write_string(outfile, pstr);
+	filesize += write_ustring(outfile, pe->str, pe->size);
 
 	while(read_file(infile, &code, sizeof(code)) > 0){
-		str = hsearch(&hashtable, (int) code);
-		if(str == NULL) {
-			hinsert(&hashtable, dict_index, (str = concatinate(pstr, pstr[0])));
+		e->key = (int) code;
+		temp = hsearch(&hashtable, e);
+		if(temp == NULL) {
+			e->key = dict_index;
+			e->str = concatinate(pe->str, pe->size, pe->str[0]);
+			e->size = pe->size + 1;
+			hinsert(&hashtable, e);
 		}
 		else {
-			hinsert(&hashtable, dict_index, concatinate(pstr, str[0]));
+			entry conc;
+			conc.str = concatinate(pe->str, pe->size, e->str[0]);
+			conc.size = pe->size + 1;
+			conc.key = dict_index;
+			hinsert(&hashtable, &conc);
 		}
-		filesize += write_string(outfile, str);
+		filesize += write_ustring(outfile, e->str, e->size);
 		dict_index++;
-		pstr = str;
+		*pe = *e;
 	}
+	free(pe);
+	free(e);
 	hdestroy(&hashtable);
-	
 	return filesize;
 }

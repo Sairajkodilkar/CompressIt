@@ -12,10 +12,10 @@
  */
 
 long insert_chars(dict *code_dict){
-	unsigned char ch = 1;
+	unsigned char ch = 0;
 	int reset = 1;
 	long size = 0;
-	for(int i = 1; i <= UCHAR_MAX; i++, ch++){
+	for(int i = 0; i <= UCHAR_MAX; i++, ch++){
 		reset = 1;
 		if(insert_string(code_dict, ch, &reset) == -2)
 			return -1;
@@ -34,7 +34,7 @@ long lzw_encoder(file *infile, file *outfile){
 	dict code_dict;
 
 	/* Maximum dict_index possible is UINT16_MAX 				*/
-	init_dict(&code_dict, LZWCODE_MAX);
+	init_dict(&code_dict,  LZWCODE_MAX);
 
 	/* initialize the dictionary with all characters		*/
 	if(insert_chars(&code_dict) < 0){
@@ -42,7 +42,7 @@ long lzw_encoder(file *infile, file *outfile){
 		return -1;
 	}
 
-	char ch = '\0';
+	unsigned char ch = '\0';
 
 	int reset = 1;
 	dict_index status = 0;

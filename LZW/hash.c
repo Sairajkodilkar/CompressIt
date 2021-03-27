@@ -11,13 +11,20 @@ void init_hash(hash *hp, int maxsize){
 	return;
 }
 
-void init_entry(entry *curr, int key, char *str, entry *next){
+void init_entry(
+		entry *curr, 
+		int key, 
+		unsigned char *str, 
+		int size, 
+		entry *next )
+{
 	if(curr == NULL){
 		return;
 	}
 	curr->key = key;
 	curr->str = str;
 	curr->next = next;
+	curr->size = size;
 	return;
 }
 
@@ -40,7 +47,11 @@ entry *getnewentry(){
 	return temp;
 }
 
-char *hinsert(hash *hp, int key, char *str){
+/*char *hinsert(hash *hp, int key, unsigned char *str, int size){ */
+entry *hinsert(hash *hp, entry *e){
+
+	int key = e->key;
+
 	/* get hashtable dict_index from hash function */
 	int dict_index = __hashfunc(key);
 	/* go to that row and search for key linearly in linked list */
@@ -57,20 +68,26 @@ char *hinsert(hash *hp, int key, char *str){
 		if(*found == NULL){
 			return NULL;
 		}
-		init_entry(*found, key, str, NULL);
+		init_entry(*found, e->key, e->str, e->size, NULL);
 		hp->size++;
-		return str;
+		return e;
 	}
 	else{
 		/* entry already exist */
-		char *temp;
+		unsigned char *temp;
+		int size;
 		temp = (*found)->str;
-		(*found)->str = str;
-		return temp;
+		size = (*found)->size;
+		(*found)->str = e->str;
+		(*found)->size = e->size;
+		e->str = temp;
+		e->size = size;
+		return e;
 	}
 }
 
-char *hsearch(hash *hp, int key){
+entry *hsearch(hash *hp, entry *e){
+	int key = e->key;
 	int dict_index = __hashfunc(key);
 
 	entry **found = search(&(hp->entries[dict_index]), key);
@@ -79,28 +96,9 @@ char *hsearch(hash *hp, int key){
 		return NULL;
 	}
 	else{
-		return (*found)->str;
-	}
-}
-
-char *hdelete(hash *hp, int key){
-	int dict_index = __hashfunc(key);
-
-	entry **found = search(&(hp->entries[dict_index]), key);
-
-	if(found == NULL){
-		return NULL;
-	}
-	if(*found == NULL){
-		return NULL;
-	}
-	else{
-		entry *temp = (*found);
-		*found = (*found)->next;
-		char *str = temp->str;
-		free(temp);
-		hp->size--;
-		return str;
+		e->str = (*found)->str;
+		e->size= (*found)->size;
+		return e;
 	}
 }
 
@@ -118,5 +116,6 @@ void hdestroy(hash *hp){
 		hp->entries[i] = NULL;
 	}
 	hp->size = 0;
+	return;
 }
 
