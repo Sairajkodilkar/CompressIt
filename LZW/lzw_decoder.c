@@ -70,16 +70,23 @@ long lzw_decoder(file *infile, file *outfile){
 		e->key = (int) code;
 		temp = hsearch(&hashtable, e);
 		if(temp == NULL) {
-			e->key = dict_index;
-			e->str = concatinate(pe->str, pe->size, pe->str[0]);
-			e->size = pe->size + 1;
+			init_entry(
+					e, 
+					dict_index, 
+					concatinate(pe->str, pe->size, pe->str[0]), 
+					pe->size + 1,
+					NULL
+					);
 			hinsert(&hashtable, e);
 		}
 		else {
 			entry conc;
-			conc.str = concatinate(pe->str, pe->size, e->str[0]);
-			conc.size = pe->size + 1;
-			conc.key = dict_index;
+			init_entry(
+					&conc,
+					dict_index,
+					concatinate(pe->str, pe->size, e->str[0]),
+					pe->size + 1
+					);
 			hinsert(&hashtable, &conc);
 		}
 		filesize += write_ustring(outfile, e->str, e->size);
