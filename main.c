@@ -6,6 +6,10 @@
 #include <unistd.h>
 #include <string.h>
 #include <assert.h>
+/* TODO:
+ * 	redesign Make the options simple and add first byte to destination compress file
+ * 	to be compression method 
+ */
 
 #define NAMESIZE (512)
 #define PERM (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
@@ -13,6 +17,23 @@
 #define WCMODE (O_CREAT | O_WRONLY)
 #define MAXEXT 5
 
+/* compression flags 					*/
+enum {
+	COMPRESSION = 1, 
+	EXTRACT = COMPRESSION << 1, 
+	HUFFMAN = EXTRACT << 1, 
+	LZW = HUFFMAN << 1,
+	FI = LZW << 1,
+	HELP = FI << 1,
+	OUTPUT = HELP << 1
+};
+
+#define ISCOMPRESSION(flag) ((flag) & COMPRESSION)
+#define ISEXTRACT(flag) ((flag) & EXTRACT)
+#define ISHUFFMAN(flag) ((flag) & HUFFMAN)
+#define ISLZW(flag) ((flag) & LZW)
+#define ISFILE(flag) ((flag) & FI)
+#define ISHELP(flag) ((flag) & HELP)
 
 void usage(int status, char **argv){
 	if(status){
@@ -191,7 +212,7 @@ int main(int argc, char **argv){
 	close_file(outfile);
 	outfile = NULL;
 
-	//calculate percentage;
+	//TODO :calculate percentage;
 
 	return 0;
 }

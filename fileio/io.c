@@ -68,20 +68,11 @@ file *open_file(char *name, int perm, int mode) {
 	return inputfile;
 }
 
-void setflag(file *fp, int flag){
+void setflags(file *fp, int compress, int method){
 
 	/* for setting huffman or lzw flag compression flag must be set */
-	if(ISCOMPRESSION(flag)){
-		fp->atrb.compress = COMPRESSION;
-		
-		if(ISLZW(flag)){
-			fp->atrb.method = LZW;
-		}
-		else{
-			/* default huffman is consider 	*/
-			fp->atrb.method = HUFFMAN;
-		}
-	}
+	fp->atrb.compress =  compress;
+	fp->atrb.method = method;
 	return;
 }
 
