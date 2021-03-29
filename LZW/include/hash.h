@@ -26,6 +26,13 @@ typedef struct hash {
 
 void init_hash(hash *hp, int maxsize);
 
+void init_entry(
+		entry *curr, 
+		int key, 
+		unsigned char *str, 
+		int size, 
+		entry *next );
+
 entry *getnewentry(void);
 
 /* str must be already allocated by user		 			*/
@@ -35,6 +42,7 @@ entry *hinsert(hash *hp, entry *e);
 entry *hsearch(hash *hp, entry *e);
 
 void hdestroy(hash *hp);
+
 
 
 #endif 

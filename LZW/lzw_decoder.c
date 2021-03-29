@@ -85,7 +85,8 @@ long lzw_decoder(file *infile, file *outfile){
 					&conc,
 					dict_index,
 					concatinate(pe->str, pe->size, e->str[0]),
-					pe->size + 1
+					pe->size + 1,
+					NULL
 					);
 			hinsert(&hashtable, &conc);
 		}

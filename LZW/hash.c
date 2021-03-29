@@ -14,7 +14,7 @@ void init_hash(hash *hp, int maxsize){
 void init_entry(
 		entry *curr, 
 		int key, 
-		uchar *str, 
+		unsigned char *str, 
 		int size, 
 		entry *next )
 {
