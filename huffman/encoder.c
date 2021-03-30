@@ -57,6 +57,8 @@ long huffman_encoder(file *infile, file *outfile){
 
 	/* write huffman code to the file 					*/
 	long filesize = write_huffman_code(sym_table, infile, outfile, codelength_count);
+	set_char_size(outfile, filesize);
+	set_file_size(outfile, filesize);
 
 	destroy_huffman_tree(&codetree);
 

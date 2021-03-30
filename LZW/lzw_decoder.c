@@ -21,7 +21,7 @@ int write_ustring(file *outfile, uchar *str, int size){
 	return write_file(outfile, str, size);
 }
 
-char *concatinate(uchar *str, int size, uchar ch){
+uchar *concatinate(uchar *str, int size, uchar ch){
 	uchar *nstr = (uchar *) malloc(sizeof(uchar) * (size + 1));
 	if(nstr == NULL)
 		return NULL;

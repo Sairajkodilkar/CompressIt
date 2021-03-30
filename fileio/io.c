@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <errno.h>
-#include "huffman.h"
 
 #include "io.h"
 /* utimensat to set the time attribute of file */
@@ -75,6 +74,8 @@ void setflags(file *fp, int compress, int method){
 	fp->atrb.method = method;
 	return;
 }
+
+
 
 
 #define BYTE (1)

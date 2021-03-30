@@ -100,6 +100,19 @@ static inline long int get_char_size(file *infile){
 	return infile->atrb.char_size;
 }
 
+static inline void set_file_size(file *infile, long int size){
+	if(infile == NULL)
+		return;
+	infile->atrb.size = size;
+}
+
+static inline long int get_file_size(file *infile){
+	if(infile == NULL)
+		return -1;
+
+	return infile->atrb.size;
+}
+
 
 file *open_file(char *name, int perm, int mode) ;
 

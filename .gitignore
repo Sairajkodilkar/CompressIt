@@ -3,4 +3,6 @@
 ~*
 *.tmp
 *temp*
+*.huff
+*.lzw
 

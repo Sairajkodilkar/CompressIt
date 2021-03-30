@@ -47,12 +47,13 @@ long huffman_decoder(file *infile, file *outfile){
 
 	//read the long char count from infile.
 	long char_size = read_char_size(infile);
-	set_char_size(infile, char_size);
+	set_char_size(outfile, char_size);
+	set_file_size(outfile, char_size);
 
 	int codelength_count[CHAR_RANGE];
 
 	//read the count table from the file.
-	long file_size = read_code_length_count(infile, sym_table, CHAR_RANGE);
+	read_code_length_count(infile, sym_table, CHAR_RANGE);
 
 	init_code_lenght_count(sym_table, codelength_count);
 
@@ -69,11 +70,11 @@ long huffman_decoder(file *infile, file *outfile){
 
 
 	//read file bit by bit till char count is zero and decode the character.
-	file_size += inflate_file(infile, outfile, codetree, get_char_size(infile));
+	inflate_file(infile, outfile, codetree, char_size);
 
 	destroy_huffman_tree(&codetree);
 
-	return file_size;
+	return char_size;
 }
 
 
