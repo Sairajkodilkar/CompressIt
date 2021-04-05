@@ -14,7 +14,7 @@ void init_hash(hash *hp, int maxsize){
 void init_entry(
 		entry *curr, 
 		int key, 
-		unsigned char *str, 
+		u_char *str, 
 		int size, 
 		entry *next )
 {
@@ -61,9 +61,6 @@ entry *hinsert(hash *hp, entry *e){
 	}
 
 	if(*found == NULL){
-		if(hp->size >= hp->maxsize){
-			return NULL;
-		}
 		*found = getnewentry();
 		if(*found == NULL){
 			return NULL;

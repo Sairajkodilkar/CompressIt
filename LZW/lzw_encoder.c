@@ -15,7 +15,7 @@ long insert_chars(dict *code_dict){
 	unsigned char ch = 0;
 	int reset = 1;
 	long size = 0;
-	for(int i = 0; i <= UCHAR_MAX; i++, ch++){
+	for(int i = 1; i <= 255; i++, ch++){
 		reset = 1;
 		if(insert_string(code_dict, ch, &reset) == -2)
 			return -1;
@@ -48,19 +48,26 @@ long lzw_encoder(file *infile, file *outfile){
 	dict_index status = 0;
 	lzw_codetype prevdict_index = -1;
 
+	int stringsize = 0, max = 0;
+
 	while(read_file(infile, &ch, sizeof(ch)) > 0){
 
 		status = insert_string(&code_dict, ch, &reset);
+		stringsize++;
+		if(stringsize > max){
+			max = stringsize;
+		}
 		if(status == -2){
 			destroy_dict(&code_dict);
 			return -1;
 		}
-		else if(status == -1){
+		else if(status == -1 || stringsize >= INT16_MAX){
 			reset = 1;
 
 			filesize += write_file(outfile, &prevdict_index, sizeof(prevdict_index));
 
 			status = insert_string(&code_dict, ch, &reset);
+			stringsize = 0;
 		}
 		prevdict_index = (lzw_codetype)status;
 	}
@@ -69,5 +76,6 @@ long lzw_encoder(file *infile, file *outfile){
 	filesize += write_file(outfile, &prevdict_index, sizeof(prevdict_index));
 
 	destroy_dict(&code_dict);
+	printf("max %d\n", max);
 	return filesize;
 }

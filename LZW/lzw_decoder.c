@@ -55,6 +55,7 @@ long lzw_decoder(file *infile, file *outfile){
 	temp = pe = getnewentry();
 
 	pe->key = (int ) code;
+	dict_index = 255;
 
 	pe = hsearch(&hashtable, pe);
 

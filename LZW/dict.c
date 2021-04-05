@@ -71,10 +71,6 @@ dict_index insert_string(dict *diction, unsigned char ch, int *reset){
 		return -2;
 
 
-	if(diction->count >= diction->maxlength){
-		return -1;
-	}
-
 	struct trie 
 		*sibling = NULL,
 		*next = NULL;
