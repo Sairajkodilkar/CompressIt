@@ -14,7 +14,7 @@ char *get_filename(char *infile, int flag);
 #define NAMESIZE (512)
 #define PERM (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
 #define RMODE (O_RDONLY)
-#define WCTMODE (O_CREAT | O_WRONLY | O_TRUNC)
+#define WCMODE (O_CREAT | O_WRONLY)
 #define MAXEXT 5
 
 /* compression flags 					*/
@@ -25,8 +25,7 @@ enum {
 	LZW = HUFFMAN << 1,
 	FI = LZW << 1,
 	HELP = FI << 1,
-	OUTPUT = HELP << 1,
-	OVERWRITE = OUTPUT << 1
+	OUTPUT = HELP << 1
 };
 
 #define ISCOMPRESSION(flag) ((flag) & COMPRESSION)
@@ -48,13 +47,12 @@ void usage(int status){
 	else{
 		printf("Usage compress [OPTION..] [FILE]..\n");
 		printf("compress can compress the file using huffman or LZW algorithm\n");
-		printf("\nExamples :\n\tcompress -chf foo.txt com\n\tcompress -xhf foo.txt.huff foo\n");
+		printf("\nExamples :\n\tcompress -chf compressfile.huff foo\n\tcompress -xhf compressedfile.huff foo\n");
 		printf("\nMain operation Mode:\n\
 	-h use huffman algorithm for compression\n\
 	-l use lzw algorithm for compression\n\
 	-c compress file\n\
 	-x extract the compressed file\n\
-	-y to overwrite existing file\n\
 	-f use the given file as input\n");
 
 		exit(0);
@@ -139,16 +137,12 @@ int getflag(int option){
 			return OUTPUT;
 			break;
 
-		case'y':
-			return OVERWRITE;
-			break;
-
 		default:
 			return -1;
 	}
 }
 
-const char optstring[] = "uhlcxf:o:y";
+const char optstring[] = "uhlcxf:o:";
 
 int main(int argc, char **argv){
 
@@ -192,17 +186,14 @@ int main(int argc, char **argv){
 	if(infilename == NULL){
 		die("Please specify filename\n");
 	}
-	if(access(infilename, F_OK) == -1){
-		die("file does not exist\n");
-	}
+
 	if(outfilename == NULL){
 		outfilename = get_filename(infilename, flag);
 	}
 	
 	/* open both the files 								*/
 	infile = open_file(infilename, RMODE, PERM);
-	outfile = open_file(outfilename, WCTMODE, PERM);
-
+	outfile = open_file(outfilename, WCMODE, PERM);
 	/* compress or decompress both the files	 		*/
 	if(ISCOMPRESSION(flag) && ISEXTRACT(flag)){
 		die("You cannot specify both -x and -c options\n");
@@ -220,16 +211,13 @@ int main(int argc, char **argv){
 	}
 	/* get the percentage compress or decompress		*/
 	double percentage = ((double)outsize / (double)insize) * 100.0f;
-
-	if(!(flag & OUTPUT)){
-		free(outfilename);
-	}
+	free(outfilename);
 
 	close_file(infile);
 	close_file(outfile);
 
 	/* print time required, infilesize, outfilesize, percentage [de]compressed */
-	printf("%8f %ld %ld %8f\n", time_taken, insize, outsize, percentage);
+	printf("%8f, %ld, %ld, %8f\n", time_taken, insize, outsize, percentage);
 
 	return 0;
 }
@@ -285,19 +273,16 @@ char *get_filename(char *infile, int flag){
 		}
 	}
 	if(access(newfile, F_OK) == 0){
-		if(!(flag & OVERWRITE)){
-			printf("%s already exist do you want to overwrite? [y/n]: ", newfile);	
-			char yn;
-			scanf("%c", &yn);
-
-			switch(yn) {
-				case 'y':
-					return newfile;
-					break;
-				case 'n':
-					die("");
-					break;
-			}
+		printf("%s already exist do you want to overwrite? [y/n]: ", newfile);	
+		char yn;
+		scanf("%c", &yn);
+		switch(yn) {
+			case 'y':
+				return newfile;
+				break;
+			case 'n':
+				die("");
+				break;
 		}
 	}
 

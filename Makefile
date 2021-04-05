@@ -10,12 +10,10 @@ I_FLAG = $(addprefix -I ,$(HEADER_I))
 C_FLAG = -Wall -g3 
 #MEM_FLAG = -fsanitize=address
 
-EXE = compress
-
 all: compress
 
 compress : $(OBJ)
-	$(CC) $(I_FLAG) $(C_FLAG) $(MEM_FLAG) $(OBJ) -o $(EXE)
+	$(CC) $(I_FLAG) $(MEM_FLAG) $(OBJ) -o compress
 
 %.o:%.c $(HEADER) Makefile
 	$(CC) $(I_FLAG) $(C_FLAG) $< -c -o $@
