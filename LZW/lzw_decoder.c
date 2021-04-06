@@ -50,12 +50,12 @@ long lzw_decoder(file *infile, file *outfile){
 		hdestroy(&hashtable);
 		return 0;
 	}
+	int max = LZWCODE_MAX;
 	entry *e, *pe, *temp;
 	e = getnewentry();
 	temp = pe = getnewentry();
 
 	pe->key = (int ) code;
-	dict_index = 255;
 
 	pe = hsearch(&hashtable, pe);
 
@@ -70,30 +70,32 @@ long lzw_decoder(file *infile, file *outfile){
 	while(read_file(infile, &code, sizeof(code)) > 0){
 		e->key = (int) code;
 		temp = hsearch(&hashtable, e);
-		if(temp == NULL) {
-			init_entry(
-					e, 
-					dict_index, 
-					concatinate(pe->str, pe->size, pe->str[0]), 
-					pe->size + 1,
-					NULL
-					);
-			hinsert(&hashtable, e);
+		if(dict_index < max){
+			if(temp == NULL) {
+				init_entry(
+						e, 
+						dict_index, 
+						concatinate(pe->str, pe->size, pe->str[0]), 
+						pe->size + 1,
+						NULL
+						);
+				hinsert(&hashtable, e);
+			}
+			else {
+				entry conc;
+				init_entry(
+						&conc,
+						dict_index,
+						concatinate(pe->str, pe->size, e->str[0]),
+						pe->size + 1,
+						NULL
+						);
+				hinsert(&hashtable, &conc);
+			}
+			dict_index++;
+			*pe = *e;
 		}
-		else {
-			entry conc;
-			init_entry(
-					&conc,
-					dict_index,
-					concatinate(pe->str, pe->size, e->str[0]),
-					pe->size + 1,
-					NULL
-					);
-			hinsert(&hashtable, &conc);
-		}
-		filesize += write_ustring(outfile, e->str, e->size);
-		dict_index++;
-		*pe = *e;
+		filesize += write_file(outfile, e->str, sizeof(uchar) * (e->size));
 	}
 	free(pe);
 	free(e);

@@ -14,7 +14,7 @@ void init_hash(hash *hp, int maxsize){
 void init_entry(
 		entry *curr, 
 		int key, 
-		u_char *str, 
+		unsigned char *str, 
 		int size, 
 		entry *next )
 {
@@ -61,6 +61,9 @@ entry *hinsert(hash *hp, entry *e){
 	}
 
 	if(*found == NULL){
+		if(hp->size >= hp->maxsize){
+			return NULL;
+		}
 		*found = getnewentry();
 		if(*found == NULL){
 			return NULL;
@@ -70,6 +73,7 @@ entry *hinsert(hash *hp, entry *e){
 		return e;
 	}
 	else{
+		printf("found already exist\n");
 		/* entry already exist */
 		unsigned char *temp;
 		int size;

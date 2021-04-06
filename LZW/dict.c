@@ -71,12 +71,17 @@ dict_index insert_string(dict *diction, unsigned char ch, int *reset){
 		return -2;
 
 
+
 	struct trie 
 		*sibling = NULL,
 		*next = NULL;
 
 	next = search_child(temp, &sibling, ch);
 	if(next == NULL){
+		if(diction->count >= diction->maxlength){
+			/* dont insert that char into dict 	*/
+			return -1;
+		}
 		next = (struct trie *) malloc(sizeof(struct trie));
 		init_trienode(next, diction->count++, ch);
 		if(sibling == NULL){

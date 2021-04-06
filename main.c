@@ -211,7 +211,8 @@ int main(int argc, char **argv){
 	}
 	/* get the percentage compress or decompress		*/
 	double percentage = ((double)outsize / (double)insize) * 100.0f;
-	free(outfilename);
+	if(!(flag && OUTPUT))
+		free(outfilename);
 
 	close_file(infile);
 	close_file(outfile);
