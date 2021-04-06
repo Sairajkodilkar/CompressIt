@@ -25,7 +25,8 @@ enum {
 	LZW = HUFFMAN << 1,
 	FI = LZW << 1,
 	HELP = FI << 1,
-	OUTPUT = HELP << 1
+	OUTPUT = HELP << 1,
+	OVERWRITE = OUTPUT << 1
 };
 
 #define ISCOMPRESSION(flag) ((flag) & COMPRESSION)
@@ -137,12 +138,16 @@ int getflag(int option){
 			return OUTPUT;
 			break;
 
+		case 'y':
+			return OVERWRITE;
+			break;
+
 		default:
 			return -1;
 	}
 }
 
-const char optstring[] = "uhlcxf:o:";
+const char optstring[] = "uhlcxf:o:y";
 
 int main(int argc, char **argv){
 
@@ -210,7 +215,10 @@ int main(int argc, char **argv){
 		outsize = decompress(infile, outfile, flag, &time_taken);
 	}
 	/* get the percentage compress or decompress		*/
-	double percentage = ((double)outsize / (double)insize) * 100.0f;
+	double percentage = (((double)insize - (double)outsize) / (double) insize) * 100.0f;
+	if(percentage < 0.0){
+		percentage = -percentage;
+	}
 	if(!(flag && OUTPUT))
 		free(outfilename);
 
@@ -218,7 +226,7 @@ int main(int argc, char **argv){
 	close_file(outfile);
 
 	/* print time required, infilesize, outfilesize, percentage [de]compressed */
-	printf("%8f, %ld, %ld, %8f\n", time_taken, insize, outsize, percentage);
+	printf("%s, %8f, %ld, %ld, %8f\n", infilename, time_taken, insize, outsize, percentage);
 
 	return 0;
 }
@@ -273,8 +281,10 @@ char *get_filename(char *infile, int flag){
 			newfile = detach(infile, LZWEXT);
 		}
 	}
-	if(access(newfile, F_OK) == 0){
+	if(!(flag & OVERWRITE) && access(newfile, F_OK) != -1){
+
 		printf("%s already exist do you want to overwrite? [y/n]: ", newfile);	
+
 		char yn;
 		scanf("%c", &yn);
 		switch(yn) {

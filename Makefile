@@ -7,19 +7,28 @@ HEADER_I = huffman/include/ fileio/include/ LZW/include/ error/include/
 HEADER = $(wildcard $(addsuffix *.h,$(HEADER_I)))
 
 I_FLAG = $(addprefix -I ,$(HEADER_I))
-C_FLAG = -Wall -g3 
+#DEBUG = -g3
+C_FLAG = -Wall $(DEBUG)
 #MEM_FLAG = -fsanitize=address
 
-all: compress
+EXE = compress
 
-compress : $(OBJ)
-	$(CC) $(I_FLAG) $(MEM_FLAG) $(OBJ) -o compress
+all: run
+
+run : $(OBJ)
+	$(CC) $(I_FLAG) $(MEM_FLAG) $(OBJ) -o $(EXE)
 
 %.o:%.c $(HEADER) Makefile
 	$(CC) $(I_FLAG) $(C_FLAG) $< -c -o $@
 
-.PHONY: clean
+.PHONY: clean gendata plotdata
 
 clean:
 	-rm $(OBJ)
+
+gendata:
+	./generate_data.sh
+
+plotdata:
+	./plot.py
 
