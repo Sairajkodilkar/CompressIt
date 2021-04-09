@@ -10,11 +10,13 @@ if( n != 3 ):
     sys.exit(1)
 
 titles = ["Filename", "Time", "Input_size", "Output_size", "percentage"]
+units = {"Time":"second", "Input_size":"byte", "Output_size":"byte",
+        "percentage":""}
 
 huffman_result = pd.read_csv(sys.argv[1], names=titles)
 lzw_result = pd.read_csv(sys.argv[2], names=titles)
 
-xquantity = "Input_size"
+xquantity = titles[2]
 
 for col in titles :
 
@@ -24,12 +26,21 @@ for col in titles :
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
 
-    ax.set_xlabel(xquantity)
-    ax.set_ylabel(col)
-    ax.set_title(f'Huffman and LZW {col} comparison')
+    unit = units[xquantity]
 
-    huffman_result.plot(ax=ax, x=xquantity, y=col, kind="line", figsize=(10,10), label="Huffman")
-    lzw_result.plot(ax=ax, x=xquantity, y=col, kind="line", figsize=(10,10), label="LZW")
+    xlabel = f"{xquantity} {units[xquantity]}"
+    ylabel = f"{col} {units[col]}"
+    title = f'Huffman and LZW {col} comparison'
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+
+    huffman_result.plot(ax=ax, x=xquantity, y=col, kind="line", 
+            figsize=(10,10), label="Huffman")
+
+    lzw_result.plot(ax=ax, x=xquantity, y=col, kind="line", 
+            figsize=(10,10), label="LZW")
 
     plt.savefig(f'{xquantity}_{col}.jpg')
 

@@ -7,29 +7,41 @@
 
 #include "io.h"
 
+/*! \def CHAR_RANGE
+ * \brief Maximum number of character possible
+ */
 #define CHAR_RANGE (256)
 
+/*! \def CODE_SIZE
+ *\brief determines array length for canonical huffman code 
+ */
 #define CODE_SIZE (8)
 
+/*! Type of the huffman code that would be written to the file              */
 typedef uint32_t codetype;
+
+/*! maximum code possible           */
+#define CODETYPE_MAX UINT32_MAX 
+
+/*! double of Type of the huffman code that would be written to the file    */
 typedef uint64_t dcodetype; 
 
-#define CODETYPE_MAX UINT32_MAX 
+/*! maximum double code type possible for huffman codes  */
 #define DCODETYPE_MAX UINT64_MAX 
 
 
 typedef struct symbol {
 
-	/* Byte representing any character from 0 - 255   		*/
+	/*! Byte representing any character from 0 - 255   		*/
 	unsigned char ch;
 
-	/* Frequency of the character 							*/
+	/*! Frequency of the character 							*/
 	int frequency;
 
-	/* Huffman code length of that character 				*/
+	/*! Huffman code length of that character 				*/
 	int codelength;
 
-	/* Canonical huffman code for charater 					*/
+	/*! Canonical huffman code for charater 			    */
 	codetype code[CODE_SIZE];
 
 } symbol;
@@ -37,16 +49,19 @@ typedef struct symbol {
 /* Node for building huffman tree 					*/
 typedef struct node {
 
+    /*! Pointer to the symbol struct                */
 	symbol *sym;
 
+    /*! Left and right child pointer                */
 	struct node *left, *right;
 
 } node;
 
 
-/* symbol table cantaining each symbol 				*/
+/*! Table to contain symbol struct for each byte in byte range */
 typedef symbol symboltable[CHAR_RANGE];
 
+/*! Huffman tree is Tree which is traversed for generating huffman code */
 typedef node * huffman_tree;
 
 static inline int get_frequency(symbol *s){

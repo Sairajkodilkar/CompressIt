@@ -1,3 +1,9 @@
+/*! \file main.c
+ * \brief entry point for the program.
+ *
+ * This file integrates the Huffman and LZW module
+ */
+
 #include "huffman.h"
 #include "lzw.h"
 #include "io.h"
@@ -11,13 +17,34 @@
 void die(char *errstr);
 char *get_filename(char *infile, int flag);
 
+/*!\def NAMESIZE 
+ * \brief Max filename size.
+ */
 #define NAMESIZE (512)
-#define PERM (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
-#define RMODE (O_RDONLY)
-#define WCMODE (O_CREAT | O_WRONLY)
-#define MAXEXT 5
 
-/* compression flags 					*/
+/*!\def PERM
+ *\brief File permissions for new file creation.
+ */
+#define PERM (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+
+/*!\def RMODE
+ * \brief Read mode flag
+ */
+#define RMODE (O_RDONLY)
+
+/*!\def WCTMODE
+ * \brief Write, Truncate, Create flag
+ */
+#define WCTMODE (O_CREAT | O_WRONLY | O_TRUNC)
+
+/*!\def MAXEXT
+ * \brief Maximum file extension size
+ */
+#define MAXEXT (5)
+
+/*! \enum Flag
+ *  \brief Flag values for option handling.
+ */
 enum {
 	COMPRESSION = 1, 
 	EXTRACT = COMPRESSION << 1, 
@@ -27,20 +54,61 @@ enum {
 	HELP = FI << 1,
 	OUTPUT = HELP << 1,
 	OVERWRITE = OUTPUT << 1
-};
+} Flag;
 
+
+/*! \def ISCOMPRESSION(flag)
+ * \brief checks if compression flag is enable or not 
+ */
 #define ISCOMPRESSION(flag) ((flag) & COMPRESSION)
+
+/*! \def ISEXTRACT(flag)
+ * \brief checks if extract flag is enable or not 
+ */
 #define ISEXTRACT(flag) ((flag) & EXTRACT)
+
+/*! \def ISHUFFMAN(flag)
+ * \brief checks if huffman flag is enable or not 
+ */
 #define ISHUFFMAN(flag) ((flag) & HUFFMAN)
+
+/*! \def ISLZW(flag)
+ * \brief checks if LZW flag is enable or not 
+ */
 #define ISLZW(flag) ((flag) & LZW)
+
+/*! \def ISFILE(flag)
+ * \brief checks if FILE flag is enable or not 
+ */
 #define ISFILE(flag) ((flag) & FI)
+
+/*! \def ISHELP(flag)
+ * \brief checks if Help flag is enable or not 
+ */
 #define ISHELP(flag) ((flag) & HELP)
 
 /* file extensions 		*/
+
+/*! \def HUFFEXT
+ *  \brief defines huffman file extension
+ */
 #define HUFFEXT ".huff"
+
+/*! \def LZWEXT
+ *  \brief defines lzw file extension
+ */
 #define LZWEXT ".lzw"
+
+/*! \def TXTEXT 
+ *  \brief defines text file extension
+ */
 #define TXTEXT ".txt"
 
+/*! \fn void usage(int status)
+ *  \brief prints the help message to the user depending on status value
+ *  \param status if this is one then program exits using die
+ *  \see \ref die
+ */
 void usage(int status){
 	if(status){
 		die("Invalid use, Try using -u option for more info");
@@ -60,7 +128,18 @@ void usage(int status){
 	}
 }
 
-
+/*! 
+ * \brief compress the file using appropriate algorithm
+ * \param infile input file which need to be compress 
+ * \param outfile output file where compressed data needs to
+ *          store.
+ * \param flag This determines compression algorithm.
+ * \param time_taken pointer to the variable where time of compression or 
+ *          decompression is store
+ *
+ * \see lzw_encoder()
+ * \see huffman_encoder()
+ */
 long compress(file *infile, file *outfile, int flag, double *time_taken){
 	long size = 0;
 
@@ -72,8 +151,7 @@ long compress(file *infile, file *outfile, int flag, double *time_taken){
 	}
 	else if(ISLZW(flag)){
 		start = clock();
-		size = lzw_encoder(infile, outfile);
-		end = clock();
+		size = lzw_encoder(infile, outfile); end = clock();
 	}
 	else {
 		die("please specify only one method\n");
@@ -84,7 +162,18 @@ long compress(file *infile, file *outfile, int flag, double *time_taken){
 	return size;
 }
 
-
+/*!
+ * \brief decompress the file using appropriate algorithm
+ * \param infile input file which need to be decompress
+ * \param outfile output file where decompressed data needs to
+ *          store.
+ * \param flag This determines compression algorithm.
+ * \param time_taken pointer to the variable where time of compression or 
+ *          decompression is store
+ *
+ * \see \ref lzw_decoder()
+ * \see \ref huffman_decoder()
+ */
 long decompress(file *infile, file *outfile, int flag, double *time_taken){
 	long size = 0;
 
@@ -108,6 +197,11 @@ long decompress(file *infile, file *outfile, int flag, double *time_taken){
 	return size;
 }
 
+/*!
+ * \brief gets the flag flag value from option
+ * \param option The option character.h
+ * \return emum value from Flag
+ */
 int getflag(int option){
 	switch(option){
 		case 'h':
@@ -147,8 +241,14 @@ int getflag(int option){
 	}
 }
 
+/*! \brief option string used parsing commandline options */
 const char optstring[] = "uhlcxf:o:y";
 
+/*! 
+ * \brief Entry point for the program.
+ *      
+ *      Integrate all modules 
+ */
 int main(int argc, char **argv){
 
 	char *infilename = NULL, 
@@ -198,7 +298,7 @@ int main(int argc, char **argv){
 	
 	/* open both the files 								*/
 	infile = open_file(infilename, RMODE, PERM);
-	outfile = open_file(outfilename, WCMODE, PERM);
+	outfile = open_file(outfilename, WCTMODE, PERM);
 	/* compress or decompress both the files	 		*/
 	if(ISCOMPRESSION(flag) && ISEXTRACT(flag)){
 		die("You cannot specify both -x and -c options\n");
@@ -216,9 +316,7 @@ int main(int argc, char **argv){
 	}
 	/* get the percentage compress or decompress		*/
 	double percentage = (((double)insize - (double)outsize) / (double) insize) * 100.0f;
-	if(percentage < 0.0){
-		percentage = -percentage;
-	}
+
 	if(!(flag && OUTPUT))
 		free(outfilename);
 
@@ -231,12 +329,25 @@ int main(int argc, char **argv){
 	return 0;
 }
 
+/*! 
+ * \brief exits the program by printing error string to standard error
+ * \param errstr pointer to the error string 
+ * \note After calling this program exits with Failure status
+ */
 void die(char *errstr){
 	fprintf(stderr, "%s", errstr);
 	exit(EXIT_FAILURE);
 	return;
 }
 
+
+/*!
+ * \brief attache the extension string to the filename
+ * \param infilename pointer to the string where extension needs to be added
+ * \param ext filename extension to be attached
+ * \return pointer to the new file name with extension
+ * \note The return string is malloced so user must call free after usage
+ */
 char *attach(char *infilename, const char *ext){
 	char *filename;
 	if(infilename == NULL){
@@ -254,6 +365,14 @@ char *attach(char *infilename, const char *ext){
 	return filename;
 }
 
+/*! 
+ * \brief removes the given extension from filename
+ * \param infilename original filename 
+ * \param ext extension which needs to be removed
+ * \return returns the new file name with extension removed
+ * \note return string is allocated using malloc hence needs to be 
+ *       freed using free. 
+ */
 
 char *detach(char *infilename, char *ext){
 	char *last_dot = rindex(infilename, '.');
@@ -263,6 +382,13 @@ char *detach(char *infilename, char *ext){
 	char *new = strndup(infilename, strlen(infilename) - strlen(last_dot));
 	return new;
 }
+
+/*! \brief gets the outputfilename using flag values and inputfilename
+ * \param infile input filename
+ * \param flag appropriate flag
+ * \see \ref enum Flag
+ *
+ */
 char *get_filename(char *infile, int flag){
 	char *newfile;
 	if(ISCOMPRESSION(flag)) { 

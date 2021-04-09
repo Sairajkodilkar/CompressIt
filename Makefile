@@ -27,8 +27,9 @@ clean:
 	-rm $(OBJ)
 
 gendata:
-	./generate_data.sh
+	./results/generate_data.sh dat/dat[1-5]/*
 
 plotdata:
-	./plot.py
+	./results/plot.py result_huff.txt result_lzw.txt
+	
 

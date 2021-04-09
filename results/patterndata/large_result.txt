@@ -1,0 +1,9 @@
+#Results for 1GB data compression
+
+LZW:
+dat/dat6/enwik9, 1544.711652, 1000000000, 463892546, 53.610745
+
+huffman:
+dat/dat6/enwik9, 2785.175172, 1000000000, 648369475, 35.163053
+
+

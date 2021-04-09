@@ -16,14 +16,13 @@ OPTION_LZW=-ycl
 
 cmd="./compress" 
 
-lzw="lzw$"
-huff="huff$"
 
 truncate -s 0 .result_lzw.temp
 truncate -s 0 .result_huff.temp
 
 for infile in "$@"; do
-	if ! [[ $infile =~ lzw$ ]] && ! [[ $infile =~ huff$ ]] && [ -f $infile ]; then
+	if ! [[ $infile =~ lzw$ ]] && ! [[ $infile =~ huff$ ]] && [ -f $infile ]; 
+    then
 		echo "compressing $infile" > /dev/tty
 		$cmd "$OPTION_HUFF" -f "$infile" >> .result_huff.temp 
 		$cmd "$OPTION_LZW" -f "$infile" >> .result_lzw.temp 
