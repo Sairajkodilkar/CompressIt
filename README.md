@@ -23,7 +23,7 @@ of huffman and LZW algorithm.
 Also determining for what kind of data these algorithm are effective
 
 
-## How to Compare Huffman and LZW algorithm ?
+## How to compare Huffman and LZW algorithm ?
 
 ### Generating result files  
 shell script [./tools/generate_data.sh](tools/generate_data.sh) Generates The result file for the given list of files
@@ -47,7 +47,7 @@ This will produce following graph files
 |Input_size_percentage.jpg 		 | plot of size of original file vs percentage compression 			|
 
 ## Time complexity 
-The Time complexity of Huffman is **O(n)** for compression as well as decompression, Whereas Time complexity of LZW is **O(n)** for compression and **O(n + m / _&alpha;_)**, where *n* is file size in bytes, *m* is total key:values store in hashmap and *_&alpha;_* is the total slots in chained hashmap 
+The Time complexity of Huffman is **O(n)** for compression as well as decompression, Whereas Time complexity of LZW is **O(n)** for compression and **O(n + m / _&alpha;_)** for decompression, where *n* is file size in bytes, *m* is total key:values store in hashmap and *_&alpha;_* is the total slots in chained hashmap 
 
 see [timecomplexity.md](timecomplexity.md) for more details
 
