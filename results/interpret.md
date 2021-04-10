@@ -1,4 +1,4 @@
-# What does observation in [observation.md](observation.md) mean ?  
+# What does observation in [README.md](../README.md) mean ?  
 ## Observation for random data files  
 1.<strong>Why Huffman fails for random data ?</strong>  
 Huffman algorithm uses entropy encoding assigning shorter code for frequent 
@@ -39,11 +39,17 @@ being encoded. Whereas LZW adapts to the data as it reads the file and
 increases the dictionary size. As LZW reads more data it encodes the longer 
 pattern in the 2 bytes.
 
-7.<strong> Why Huffman compression ratio decreases with increase in file size ? </strong>   
+7.<strong> Why LZW beats Huffman in terms of compress time for pattern data ?  </strong>  
+In huffman There needs to be two passes over input file
+    -First pass to count frequency of bytes in file
+    -Second pass which actully compresses file.
+But In LZW only one pass is required as LZW adapts according to data.
+
+8.<strong> Why Huffman compression ratio decreases with increase in file size ? </strong>   
 As the file size increases the probability that each byte occurs with same 
 frequency increases which result in less compression of file
 
-8.<strong> Why LZW compression ratio decreases with increase in file size ?</strong>    
+9.<strong> Why LZW compression ratio decreases with increase in file size ?</strong>    
 As the file size increases dictionary of pattern fills up which has maximum of
 65536 entries for 2 byte code, After these many amount of entries 
 we are not able to add new pattern into dictionary and compression is 

@@ -102,9 +102,11 @@ dict_index insert_string(dict *diction, unsigned char ch, int *reset){
 }
 
 //searchs for the string ind in the trie
+/*
 dict_index get_ind(dict *dict, char *string){
 	return 0;
 }
+*/
 
 void _destroy_dict(struct trie *root){
 	if(root == NULL)
