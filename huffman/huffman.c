@@ -265,6 +265,7 @@ void destroy_huffman_tree(huffman_tree *codetree){
 	destroy_huffman_tree(&((*codetree)->left));
 	destroy_huffman_tree(&((*codetree)->right));
 
+    free((*codetree)->sym);
 	free(*codetree);
 	*codetree = NULL;
 
