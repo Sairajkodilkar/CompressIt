@@ -1,6 +1,6 @@
 # What does observation in [README.md](../README.md) mean ?  
 ## Observation for random data files  
-1.<strong>Why Huffman fails for random data ?</strong>  
+1.<strong>Why Huffman fails for random data ?</strong>    
 Huffman algorithm uses entropy encoding assigning shorter code for frequent 
 characters and longer codes for infrequent character. 
 Since in random data files there is equal probability of each character
@@ -8,12 +8,12 @@ appearing in the file for which huffman algorithm creates balance [huffman
 tree] (../Datastructure.md). Additionally there is 262 bytes of overhead for 
 huffman algorithm hence filesize increases.
 
-2.<strong> Why LZW fails for random data ? </strong> 
+2.<strong> Why LZW fails for random data ? </strong>   
 LZW is dictionary based compression algorithm. Hence it compresses the file
 based on pattern previously appeared in the file. Since Random data file has
 minimal pattern hence it outputs the two bytes codes more frequently.
 
-3.<strong>Why Huffman beats LZW in terms of compressed file size for random data ?</strong>  
+3.<strong>Why Huffman beats LZW in terms of compressed file size for random data ?</strong>    
 Huffman assigns nearly equal length codes for each char in the random data 
 file which creates nearly equal size compressed file. But in LZW the output
 index is fixed which is 2 byte so for every new pattern there is 2 byte output
@@ -40,10 +40,11 @@ increases the dictionary size. As LZW reads more data it encodes the longer
 pattern in the 2 bytes.
 
 7.<strong> Why LZW beats Huffman in terms of compress time for pattern data ?  </strong>  
-In huffman There needs to be two passes over input file
-    -First pass to count frequency of bytes in file
-    -Second pass which actully compresses file.
-But In LZW only one pass is required as LZW adapts according to data.
+In huffman There needs to be two passes over input file.
+* First pass to count frequency of bytes in file.    
+* Second pass which actully compresses file.  
+
+Whereas In LZW only one pass is required as LZW adapts according to data.
 
 8.<strong> Why Huffman compression ratio decreases with increase in file size ? </strong>   
 As the file size increases the probability that each byte occurs with same 
