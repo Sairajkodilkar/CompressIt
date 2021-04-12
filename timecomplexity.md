@@ -22,7 +22,7 @@ considered as O(1).
      * log(ch): for extracting from queue and again for inserting
      * ch : since above operation is done till queue is empty
 
-But This can also be considered as O(1) since ch is constant.
+    But This can also be considered as O(1) since ch is constant.
 
 4. Traversing the huffman tree is simply preorder traversal of tree 
 with 256 max nodes, here also time complexity is O(ch) i.e. O(1) as nodes 
