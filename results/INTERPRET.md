@@ -5,7 +5,7 @@ Huffman algorithm uses entropy encoding assigning shorter code for frequent
 characters and longer codes for infrequent character. 
 Since in random data files there is equal probability of each character
 appearing in the file for which huffman algorithm creates balance [huffman 
-tree] (../Datastructure.md). Additionally there is 262 bytes of overhead for 
+tree] (../DATASTRUCTURE.md). Additionally there is 262 bytes of overhead for 
 huffman algorithm hence filesize increases.
 
 2.<strong> Why LZW fails for random data ? </strong>   

@@ -51,7 +51,7 @@ Hence time complexity for decoder is also O(n)
 complexity is O(1).
 
 2. In while loop modified Trie data structure is used whose working 
-is explained in [datastructure.md](datastructure.md). which takes 
+is explained in [DATASTRUCTURE.md](./DATASTRUCTURE.md). which takes 
 O(1) time to insert and simultaneouly returns the match status.
 sinde this operations are done ch time hence time complexity of while loop is 
 O(n)
@@ -64,9 +64,9 @@ O(n)
 2. In decoder LZW uses hash table for storing strings by key
 which takes average time of O(m / _&alpha;_) for insert or lookup. where 
 m is total entries in hashtable and _&alpha;_ is number of slots in hashtable.
-see [datastructure.md](datastructure.md) for more details. since for worst case
-lookup and insert both might be done in every iteration hence time complexity
-is O(n * (m / _&alpha;_)).
+see [DATASTRUCTURE.md](./DATASTRUCTURE.md) for more details. since for worst 
+case lookup and insert both might be done in every iteration hence time 
+complexity is O(n * (m / _&alpha;_)).
 
 3. Hence total time complexity is 
 O(n * (m / _&alpha;_)) = O(1) + O(n * (m / _&alpha;_))
