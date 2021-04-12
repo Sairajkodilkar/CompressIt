@@ -21,7 +21,7 @@ make
 ## Aim of CompressIt 
 The aim of the CompressIt is to compare runtime as well as compression ratio
 of huffman and LZW algorithm.  
-Also determining for what kind of data these algorithm are effective
+Also determining for what kind of data these algorithms are effective
 
 
 ## How to compare Huffman and LZW algorithm ?
