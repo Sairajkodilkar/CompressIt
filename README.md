@@ -1,5 +1,17 @@
 # CompressIt
 
+## Table of content
+
+1. [What is CompressIt ?](#What-is-CompressIt-?)
+2. [How to build ?](#How-to-build-?)
+3. [Usgage](#Usage)
+4. [Aim of CompressIt](#Aim-of-CompressIt)
+5. [How to compare Huffman and LZW algorithm ?](#How-to-compare-Huffman-and-LZW-algorithm-?)
+6. [Time complexity](#Time-complexity)
+7. [Observation](#Observation)
+8. [Interpretation](#Interpretation)
+9. [Conclusion](#Conclusion)
+
 ## What is CompressIt ?
 CompressIt compresses the file using huffman or LZW algorithm. 
 
@@ -77,7 +89,7 @@ The observation of uncompressed size vs compressed file for both forms of data a
 	* LZW turns out be faster than huffman. 
 	* Percentage of data compressed reduces as file size increases.
 
-## What does above observation mean
+## Interpretation
 read [interpret.md](./results/interpret.md) for interpretation of each observation
 
 ## Conclusion

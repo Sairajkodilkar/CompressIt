@@ -12,7 +12,7 @@ W_FLAG = -Wall -Wextra
 C_FLAG = $(W_FLAG) $(DEBUG_FLAG)
 MEM_FLAG = -fsanitize=address
 
-EXE = compress
+EXE = compressit
 
 all: run
 

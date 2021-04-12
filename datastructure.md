@@ -4,7 +4,7 @@
 Huffman encoder and decoder both uses binary tree implimentation.
 
 
-##LZW 
+## LZW 
 
 ### LZW encoder
 * LZW encoder uses trie data structure. 
@@ -45,12 +45,13 @@ cantain one byte from 0-255.
       start unless specified. which makes each character search and insert as
       O(1) and Making LZW encoder as O(n) algorithm
 
-### LZW decoder 
-    * LZW decoder uses Hash table instead of trie.
-    * Implimentation of Hash table is done by chaining with _&alpha;_ hash 
-    table slots.
-    * The average time for such hashtable is O(m / _&alphs;_) by where m is
-    total number entries in hashtable.
+### LZW decoder   
+
+* LZW decoder uses Hash table instead of trie.
+* Implimentation of Hash table is done by chaining with _&alpha;_ hash 
+table slots.
+* The average time for such hashtable is O(m / _&alphs;_) by where m is
+total number entries in hashtable.
 
 
 
