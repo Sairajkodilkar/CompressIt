@@ -307,6 +307,12 @@ int main(int argc, char **argv){
         die("file does not exist\n");
     }
 
+	if(ISCOMPRESSION(flag) && ISEXTRACT(flag)){
+		die("You cannot specify both -x and -c options\n");
+	}
+	if(ISLZW(flag) && ISHUFFMAN(flag)){
+		die("You cannot specify both -h and -l options\n");
+	}
 	if(outfilename == NULL){
 		outfilename = get_filename(infilename, flag);
 	}
@@ -314,18 +320,14 @@ int main(int argc, char **argv){
 	/* open both the files 								*/
 	infile = open_file(infilename, RMODE, PERM);
 	outfile = open_file(outfilename, WCTMODE, PERM);
-	/* compress or decompress both the files	 		*/
-	if(ISCOMPRESSION(flag) && ISEXTRACT(flag)){
-		die("You cannot specify both -x and -c options\n");
-	}
-	if(ISLZW(flag) && ISHUFFMAN(flag)){
-		die("You cannot specify both -h and -l options\n");
-	}
 
 	long insize = get_file_size(infile);
 	long outsize = 0;
-	/* time taken in seconds		*/
+
+	/* time taken in seconds		                    */
 	double time_taken;
+
+	/* compress or decompress both the files	 		*/
 	if(ISCOMPRESSION(flag)){
 		outsize = compress(infile, outfile, flag, &time_taken);
 	}

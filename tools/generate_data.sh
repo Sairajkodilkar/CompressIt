@@ -14,7 +14,7 @@ result=$1
 OPTION_HUFF=-ych
 OPTION_LZW=-ycl
 
-cmd="./compress" 
+cmd="./compressit" 
 
 
 truncate -s 0 .result_lzw.temp
