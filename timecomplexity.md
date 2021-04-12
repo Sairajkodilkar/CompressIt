@@ -69,7 +69,7 @@ lookup and insert both might be done in every iteration hence time complexity
 is O(n * (m / _&alpha;_)).
 
 3. Hence total time complexity is 
-O(n * (m / _&alpha;_)) = 1 + O(n * (m / _&alpha;_))
+O(n * (m / _&alpha;_)) = O(1) + O(n * (m / _&alpha;_))
 
 
 
