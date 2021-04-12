@@ -50,7 +50,7 @@ This will produce following graph files
 ## Time complexity 
 The Time complexity of Huffman is **O(n)** for compression as well as decompression, Whereas Time complexity of LZW is **O(n)** for compression and **O(n * m / _&alpha;_)** for decompression, where *n* is file size in bytes, *m* is total key:values store in hashmap and *_&alpha;_* is the total slots in chained hashmap 
 
-see [timecomplexity.md](timecomplexity.md) for more details
+see [TIMECOMPLEXITY.md](TIMECOMPLEXITY.md) for more details
 
 
 
@@ -79,10 +79,10 @@ The observation of uncompressed size vs compressed file for both forms of data a
 	* Percentage of data compressed reduces as file size increases.
 
 ## Interpretation
-read [interpret.md](./results/interpret.md) for interpretation of each observation
+read [interpret.md](./results/INTERPRET.md) for interpretation of each observation
 
 ## Conclusion
-read [conclusion.md](./results/conclusion.md) for conclusion
+read [conclusion.md](./results/CONCLUSION.md) for conclusion
 
 
 
