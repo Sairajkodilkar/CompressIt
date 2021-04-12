@@ -124,16 +124,11 @@ void _destroy_dict(struct trie *root){
 }
 
 void destroy_dict(dict *dict){
-	if(dict == NULL || dict->root == NULL){
+	if(dict == NULL){
 		return;
 	}
-	struct trie *next = dict->root->left;
-	struct trie *temp = NULL;
-	while(next){
-		temp = next->sibling;
-		_destroy_dict(next);
-		next = temp;
-	}
+    _destroy_dict(dict->root);
+
 	return;
 }
 

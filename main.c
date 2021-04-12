@@ -50,10 +50,10 @@ enum {
 	EXTRACT = COMPRESSION << 1, 
 	HUFFMAN = EXTRACT << 1, 
 	LZW = HUFFMAN << 1,
-	FI = LZW << 1,
-	HELP = FI << 1,
-	OUTPUT = HELP << 1,
-	OVERWRITE = OUTPUT << 1
+	IFILE = LZW << 1,
+	OFILE = IFILE << 1,
+	HELP = OFILE << 1,
+	OVERWRITE = HELP << 1
 } Flag;
 
 
@@ -77,15 +77,26 @@ enum {
  */
 #define ISLZW(flag) ((flag) & LZW)
 
-/*! \def ISFILE(flag)
- * \brief checks if FILE flag is enable or not 
+/*! \def ISIFILE(flag)
+ * \brief checks if IFILE flag is enable or not 
  */
-#define ISFILE(flag) ((flag) & FI)
+#define ISIFILE(flag) ((flag) & IFILE)
 
 /*! \def ISHELP(flag)
  * \brief checks if Help flag is enable or not 
  */
 #define ISHELP(flag) ((flag) & HELP)
+
+/*! \def ISOFILE(flag)
+ * \brief checks if OFILE flag is enable or not
+ */
+#define ISOFILE(flag) ((flag) & OFILE)
+
+
+/*! \def ISOVERWRITE(flag)
+ * \brief checks if OVERWRITE is enable or not
+ */
+#define ISOVERWRITE(flag) ((flag) & OVERWRITE)
 
 /* file extensions 		*/
 
@@ -221,7 +232,7 @@ int getflag(int option){
 			break;
 
 		case 'f':
-			return FI;
+			return IFILE;
 			break;
 
 		case 'u':
@@ -229,7 +240,7 @@ int getflag(int option){
 			break;
 
 		case 'o':
-			return OUTPUT;
+			return OFILE;
 			break;
 
 		case 'y':
@@ -292,6 +303,10 @@ int main(int argc, char **argv){
 		die("Please specify filename\n");
 	}
 
+    if(access(infilename, F_OK) == -1){
+        die("file does not exist\n");
+    }
+
 	if(outfilename == NULL){
 		outfilename = get_filename(infilename, flag);
 	}
@@ -302,6 +317,9 @@ int main(int argc, char **argv){
 	/* compress or decompress both the files	 		*/
 	if(ISCOMPRESSION(flag) && ISEXTRACT(flag)){
 		die("You cannot specify both -x and -c options\n");
+	}
+	if(ISLZW(flag) && ISHUFFMAN(flag)){
+		die("You cannot specify both -h and -l options\n");
 	}
 
 	long insize = get_file_size(infile);
@@ -317,13 +335,14 @@ int main(int argc, char **argv){
 	/* get the percentage compress or decompress		*/
 	double percentage = (((double)insize - (double)outsize) / (double) insize) * 100.0f;
 
-	if(!(flag && OUTPUT))
+	if(!(ISOFILE(flag))) {
 		free(outfilename);
+    }
 
 	close_file(infile);
 	close_file(outfile);
 
-	/* print time required, infilesize, outfilesize, percentage [de]compressed */
+	/* print infilename, time required, infilesize, outfilesize, percentage [de]compressed */
 	printf("%s, %8f, %ld, %ld, %8f\n", infilename, time_taken, insize, outsize, percentage);
 
 	return 0;
@@ -407,7 +426,7 @@ char *get_filename(char *infile, int flag){
 			newfile = detach(infile, LZWEXT);
 		}
 	}
-	if(!(flag & OVERWRITE) && access(newfile, F_OK) != -1){
+	if(!(ISOVERWRITE(flag)) && access(newfile, F_OK) != -1){
 
 		printf("%s already exist do you want to overwrite? [y/n]: ", newfile);	
 
@@ -425,7 +444,6 @@ char *get_filename(char *infile, int flag){
 
 	return newfile;
 }
-
 
 
 

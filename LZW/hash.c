@@ -112,6 +112,7 @@ void hdestroy(hash *hp){
 		while(temp){
 			prev = temp;
 			temp = temp->next;
+            free(prev->str);
 			free(prev);
 		}
 		hp->entries[i] = NULL;

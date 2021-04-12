@@ -6,11 +6,11 @@ HEADER_I = huffman/include/ fileio/include/ LZW/include/ error/include/
 
 HEADER = $(wildcard $(addsuffix *.h,$(HEADER_I)))
 
-#DEBUG_FALG = -g3
+#DEBUG_FLAG = -g3
 I_FLAG = $(addprefix -I ,$(HEADER_I))
 W_FLAG = -Wall -Wextra
 C_FLAG = $(W_FLAG) $(DEBUG_FLAG)
-#MEM_FLAG = -fsanitize=address
+MEM_FLAG = -fsanitize=address
 
 EXE = compressit
 

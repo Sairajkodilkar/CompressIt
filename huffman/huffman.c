@@ -258,18 +258,19 @@ void destroy_huffman_tree(huffman_tree *codetree){
 	if(!codetree || !(*codetree))
 		return;
 
-	if((*codetree)->left == NULL && (*codetree)->right == NULL){
-		return;
-	}
+    if((*codetree)->left == NULL && (*codetree)->right == NULL){
+        free(*codetree);
+        return;
+    }
 
-	destroy_huffman_tree(&((*codetree)->left));
-	destroy_huffman_tree(&((*codetree)->right));
+    destroy_huffman_tree(&((*codetree)->left));
+    destroy_huffman_tree(&((*codetree)->right));
 
     free((*codetree)->sym);
-	free(*codetree);
-	*codetree = NULL;
+    free(*codetree);
+    *codetree = NULL;
 
-	return ;
+    return ;
 }
 
 

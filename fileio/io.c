@@ -181,6 +181,10 @@ int write_bit(file *output, bit in_bit, int eof_flag){
 
 void close_file(file *input){
 
+    if(input == NULL) {
+        return;
+    }
+
 	flush_file(input);
 
 	close(input->fd);
