@@ -1,6 +1,6 @@
 # Time Complexity Analysis of both the Algorithm
 
-NOTE: 
+NOTE:   
 * n = file size in bytes
 * ch = maximum unsigned characters (256) / size of symbol table
 
@@ -19,8 +19,8 @@ considered as O(1).
 
 
 3. Huffman tree is build using priority queue with O(ch log(ch))
-* log(ch): for extracting from queue and again for inserting
-* ch : since above operation is done till queue is empty
+     * log(ch): for extracting from queue and again for inserting
+     * ch : since above operation is done till queue is empty
 
 But This can also be considered as O(1) since ch is constant.
 
