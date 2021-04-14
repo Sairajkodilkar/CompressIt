@@ -79,10 +79,10 @@ The observation of uncompressed size vs compressed file for both forms of data a
 	* Percentage of data compressed reduces as file size increases.
 
 ## Interpretation
-read [interpret.md](./results/INTERPRET.md) for interpretation of each observation
+read [INTERRPRET.md](./results/INTERPRET.md) for interpretation of each observation
 
 ## Conclusion
-read [conclusion.md](./results/CONCLUSION.md) for conclusion
+read [CONCLUSION.md](./results/CONCLUSION.md) for conclusion
 
 
 

@@ -53,7 +53,7 @@ complexity is O(1).
 2. In while loop modified Trie data structure is used whose working 
 is explained in [DATASTRUCTURE.md](./DATASTRUCTURE.md). which takes 
 O(1) time to insert and simultaneouly returns the match status.
-sinde this operations are done ch time hence time complexity of while loop is 
+sinde this operations are done n time hence time complexity of while loop is 
 O(n)
 
 3. Hence Total time complexity is O(n) = O(1) + O(n).

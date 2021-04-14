@@ -50,7 +50,7 @@ cantain one byte from 0-255.
 * LZW decoder uses Hash table instead of trie.
 * Implimentation of Hash table is done by chaining with _&alpha;_ hash 
 table slots.
-* The average time for such hashtable is O(m / _&alpha;_) by where m is
+* The average time for such hashtable is O(m / _&alpha;_), where m is
 total number entries in hashtable.
 
 

@@ -53,9 +53,9 @@ frequency increases which result in less compression of file
 9.<strong> Why LZW compression ratio decreases with increase in file size ?</strong>    
 As the file size increases dictionary of pattern fills up which has maximum of
 65536 entries for 2 byte code, After these many amount of entries 
-we are not able to add new pattern into dictionary and compression is 
+we are not able to add new pattern into dictionary and compression 
 decreases, However This problem can easily be solved by using code size longer
-than 2 bytes, but this will result in decrease in compression ratio for smaller
+than 2 bytes, but this will result in less compression for smaller
 files
 
 
